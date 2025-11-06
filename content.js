@@ -342,10 +342,19 @@ function flattenAll(data, prefix = '') {
   function renderPathCandidate({ fullPath, mount, kv2 }) {
     const el = document.createElement('div');
     el.className = 'result';
+
+    // Get the current base URL (either from extension settings or page location)
+    const base = getVaultAddrFromLocation();
+    const path = fullPath.replace(mount, '');
+    const vaultUrl = `${base}/ui/vault/secrets/${mount.replace(/\/$/, '')}/kv/${encodeURIComponent(path)}`;
+
     el.innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
         <div><strong>${fullPath}</strong> <span class="kv-pill">${kv2 ? 'kv2' : 'kv1'}</span></div>
-        <span class="small">path match</span>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <span class="small">path match</span>
+          <a class="btn" href="${vaultUrl}" target="_blank" rel="noopener noreferrer">Open in UI</a>
+        </div>
       </div>`;
     return el;
   }

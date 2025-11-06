@@ -81,7 +81,7 @@
 }
 
 #vault-search-panel::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: #ffffff;
   border-radius: 10px;
 }
 
@@ -91,17 +91,18 @@
 }
 
 #vault-search-panel::-webkit-scrollbar-thumb:hover {
-  background: #333333;
+  background: #000000;
 }
 
 /* Results Styling */
 #vault-search-results code {
-  background: #f3f4f6;
+  background: #ffffff;
   padding: 3px 8px;
+  border: 1px solid #000000;
   border-radius: 6px;
   font-size: 13px;
   font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-  color: #1f2937;
+  color: #000000;
 }
 
 /* Form Elements */
@@ -109,11 +110,13 @@ input.v-input, select.v-input {
   width: 100%;
   padding: 11px 14px;
   border-radius: 8px;
-  border: 2px solid #e5e7eb;
+  border: 2px solid #000000;
   margin: 6px 0 10px 0;
   font-size: 14px;
   transition: all 0.2s;
   font-family: inherit;
+  background: #ffffff;
+  color: #000000;
 }
 
 input.v-input:focus, select.v-input:focus {
@@ -126,18 +129,21 @@ input.v-input:focus, select.v-input:focus {
 .btn {
   padding: 10px 16px;
   border-radius: 8px;
-  border: 2px solid #e5e7eb;
+  border: 2px solid #000000;
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
   transition: all 0.2s;
   background: white;
   font-family: inherit;
+  color: #000000;
+  text-decoration: none;
+  display: inline-block;
 }
 
 .btn:hover {
-  background: #f9fafb;
-  border-color: #d1d5db;
+  background: #000000;
+  color: #ffffff;
 }
 
 .btn.primary {
@@ -161,7 +167,7 @@ input.v-input:focus, select.v-input:focus {
 /* Text Styles */
 .small {
   font-size: 12px;
-  color: #6b7280;
+  color: #000000;
 }
 
 /* Layout */
@@ -183,27 +189,29 @@ input.v-input:focus, select.v-input:focus {
   font-size: 12px;
   padding: 3px 10px;
   border-radius: 999px;
-  background: #f3f4f6;
+  background: #ffffff;
   color: #000000;
   margin-left: 6px;
   font-weight: 500;
+  border: 1px solid #000000;
 }
 
 .kv-pill {
   font-size: 11px;
   padding: 2px 8px;
   border-radius: 999px;
-  background: #e5e7eb;
+  background: #ffffff;
   color: #000000;
   margin-left: 8px;
   font-weight: 600;
+  border: 1px solid #000000;
 }
 
 /* Error Messages */
 .error {
-  background: #fef2f2;
-  color: #991b1b;
-  border: 2px solid #fecaca;
+  background: #ffffff;
+  color: #000000;
+  border: 2px solid #000000;
   padding: 12px;
   border-radius: 8px;
   margin: 8px 0;
@@ -211,9 +219,9 @@ input.v-input:focus, select.v-input:focus {
 }
 
 .success {
-  background: #d1fae5;
-  color: #065f46;
-  border: 2px solid #6ee7b7;
+  background: #ffffff;
+  color: #000000;
+  border: 2px solid #000000;
   padding: 12px;
   border-radius: 8px;
   margin: 8px 0;
@@ -221,9 +229,9 @@ input.v-input:focus, select.v-input:focus {
 }
 
 .info {
-  background: #dbeafe;
-  color: #1e40af;
-  border: 2px solid #93c5fd;
+  background: #ffffff;
+  color: #000000;
+  border: 2px solid #000000;
   padding: 12px;
   border-radius: 8px;
   margin: 8px 0;
@@ -232,7 +240,7 @@ input.v-input:focus, select.v-input:focus {
 
 /* Result Cards */
 .result {
-  border: 2px solid #e5e7eb;
+  border: 2px solid #000000;
   border-radius: 12px;
   padding: 16px;
   margin: 10px 0;
@@ -242,13 +250,13 @@ input.v-input:focus, select.v-input:focus {
 
 .result:hover {
   border-color: #000000;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   transform: translateY(-1px);
 }
 
 /* Loading Spinner */
 .spinner {
-  border: 3px solid #f3f4f6;
+  border: 3px solid #ffffff;
   border-top: 3px solid #000000;
   border-radius: 50%;
   width: 24px;
@@ -272,7 +280,7 @@ input.v-input:focus, select.v-input:focus {
 .tooltip .tooltiptext {
   visibility: hidden;
   width: 200px;
-  background-color: #1f2937;
+  background-color: #000000;
   color: #fff;
   text-align: center;
   border-radius: 6px;
@@ -318,34 +326,35 @@ input.v-input:focus, select.v-input:focus {
 /* Dark Mode Support */
 @media (prefers-color-scheme: dark) {
   #vault-search-panel {
-    background: #1f2937;
-    color: #f9fafb;
+    background: #000000;
+    color: #ffffff;
   }
 
   input.v-input, select.v-input {
-    background: #374151;
-    border-color: #4b5563;
-    color: #f9fafb;
+    background: #000000;
+    border-color: #ffffff;
+    color: #ffffff;
   }
 
   .btn {
-    background: #374151;
-    border-color: #4b5563;
-    color: #f9fafb;
+    background: #000000;
+    border-color: #ffffff;
+    color: #ffffff;
   }
 
   .btn:hover {
-    background: #4b5563;
+    background: #ffffff;
+    color: #000000;
   }
 
   .result {
-    background: #374151;
-    border-color: #4b5563;
+    background: #000000;
+    border-color: #ffffff;
   }
 
   #vault-search-results code {
-    background: #4b5563;
-    color: #f9fafb;
+    background: #000000;
+    color: #ffffff;
   }
 }
 

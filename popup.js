@@ -23,9 +23,15 @@ const connectionText = document.getElementById('connectionText');
 
 let currentAuthType = 'token';
 
+// Save form state before popup closes
+window.addEventListener('beforeunload', () => {
+  saveFormState();
+});
+
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
   loadSettings();
+  restoreFormState(); // Restore any unsaved form data
   setupEventListeners();
   checkConnectionStatus();
 });
@@ -51,6 +57,19 @@ function setupEventListeners() {
       if (e.key === 'Enter') {
         handleSave();
       }
+    });
+
+    // Auto-save form state on input change
+    input.addEventListener('input', () => {
+      saveFormState();
+    });
+  });
+
+  // Save state when auth type changes
+  document.querySelectorAll('.auth-tab').forEach(tab => {
+    const originalClickHandler = tab.onclick;
+    tab.addEventListener('click', () => {
+      saveFormState();
     });
   });
 }
@@ -226,10 +245,10 @@ async function handleSave() {
     showStatus('✓ Successfully connected to Vault!', 'success');
     updateConnectionStatus(true);
 
-    // Close popup after 1.5 seconds
-    setTimeout(() => {
-      window.close();
-    }, 1500);
+    // Clear the saved form state since we successfully connected
+    clearFormState();
+
+    // Don't auto-close - let user close manually
 
   } catch (error) {
     console.error('Save error:', error);
@@ -361,4 +380,83 @@ async function checkConnectionStatus() {
     console.error('Error checking connection:', error);
     updateConnectionStatus(false);
   }
+}
+
+// Save current form state to session storage
+function saveFormState() {
+  const formState = {
+    vaultUrl: vaultUrlInput.value,
+    namespace: namespaceInput.value,
+    authType: currentAuthType,
+    token: tokenInput.value,
+    username: usernameInput.value,
+    password: passwordInput.value,
+    userpassMount: userpassMountInput.value,
+    ldapUsername: ldapUsernameInput.value,
+    ldapPassword: ldapPasswordInput.value,
+    ldapMount: ldapMountInput.value,
+    rememberMe: rememberMeCheckbox.checked,
+    timestamp: Date.now()
+  };
+
+  sessionStorage.setItem('vaultPopupFormState', JSON.stringify(formState));
+}
+
+// Restore form state from session storage
+function restoreFormState() {
+  try {
+    const savedState = sessionStorage.getItem('vaultPopupFormState');
+    if (!savedState) return;
+
+    const formState = JSON.parse(savedState);
+
+    // Only restore if saved within the last 5 minutes
+    const fiveMinutes = 5 * 60 * 1000;
+    if (Date.now() - formState.timestamp > fiveMinutes) {
+      sessionStorage.removeItem('vaultPopupFormState');
+      return;
+    }
+
+    // Restore form values (only if current values are empty)
+    if (!vaultUrlInput.value && formState.vaultUrl) {
+      vaultUrlInput.value = formState.vaultUrl;
+    }
+    if (!namespaceInput.value && formState.namespace) {
+      namespaceInput.value = formState.namespace;
+    }
+    if (!tokenInput.value && formState.token) {
+      tokenInput.value = formState.token;
+    }
+    if (!usernameInput.value && formState.username) {
+      usernameInput.value = formState.username;
+    }
+    if (!passwordInput.value && formState.password) {
+      passwordInput.value = formState.password;
+    }
+    if (!userpassMountInput.value && formState.userpassMount) {
+      userpassMountInput.value = formState.userpassMount;
+    }
+    if (!ldapUsernameInput.value && formState.ldapUsername) {
+      ldapUsernameInput.value = formState.ldapUsername;
+    }
+    if (!ldapPasswordInput.value && formState.ldapPassword) {
+      ldapPasswordInput.value = formState.ldapPassword;
+    }
+    if (!ldapMountInput.value && formState.ldapMount) {
+      ldapMountInput.value = formState.ldapMount;
+    }
+
+    // Restore auth type
+    if (formState.authType) {
+      switchAuthTab(formState.authType);
+    }
+
+  } catch (error) {
+    console.error('Error restoring form state:', error);
+  }
+}
+
+// Clear saved form state on successful save
+function clearFormState() {
+  sessionStorage.removeItem('vaultPopupFormState');
 }
