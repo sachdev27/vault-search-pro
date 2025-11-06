@@ -247,6 +247,30 @@ async function handleSave() {
   saveBtn.textContent = 'Connecting...';
 
   try {
+    // Request host permissions for the Vault URL
+    const url = new URL(vaultUrl);
+    const origin = url.origin;
+    const permissionRequest = {
+      origins: [
+        `${origin}/*`,
+        'http://localhost/*',
+        'http://127.0.0.1/*'
+      ]
+    };
+
+    // Check if we already have permission
+    const hasPermission = await chrome.permissions.contains(permissionRequest);
+
+    if (!hasPermission) {
+      // Request permission from user
+      showStatus('Requesting permission to access Vault server...', 'info');
+      const granted = await chrome.permissions.request(permissionRequest);
+
+      if (!granted) {
+        throw new Error('Permission denied. Extension needs access to your Vault server to function.');
+      }
+    }
+
     // Attempt to authenticate
     const authResult = await authenticateVault(vaultUrl, namespace, currentAuthType, authData);
 
