@@ -1,452 +1,434 @@
 /**
- * Vault Search Extension - Background Service Worker (Optimized)
+ * Vault Search Extension - Background Service Worker
  * Author: Sandesh Sachdev
- * Version: 2.3.1
+ * Version: 2.1.0
  *
- * Performance Optimizations:
- * - Parallel mount searching with Promise.allSettled
- * - KV2 mount detection caching
- * - Request batching and rate limiting
- * - Efficient recursive path traversal with depth limits
- * - Memory-efficient result streaming
- * - Connection pooling for API requests
- *
- * Features:
- * - Persistent authentication with auto-refresh
- * - Background search with result caching
- * - Fuzzy matching with exact match support
- * - Case-insensitive search option
- * - Session management with activity tracking
- * - Automatic cleanup of expired searches
+ * Handles authentication state management, token storage, and message passing
  */
 
-// ============================================================================
-// CONSTANTS
-// ============================================================================
-const CONSTANTS = {
-  AUTH: {
-    TOKEN_EXPIRY_TIME: 12 * 60 * 60 * 1000,  // 12 hours
-    ACTIVITY_CHECK_INTERVAL: 5 * 60 * 1000,  // 5 minutes
-    TOKEN_REFRESH_THRESHOLD: 30 * 60 * 1000  // 30 minutes before expiry
-  },
-  SEARCH: {
-    MAX_DEPTH: 10,                            // Max directory depth
-    MAX_CONCURRENT_MOUNTS: 5,                 // Parallel mount searches
-    MAX_RESULTS_PER_MOUNT: 100,               // Limit results per mount
-    SEARCH_TIMEOUT: 5 * 60 * 1000,           // 5 minute search timeout
-    CLEANUP_INTERVAL: 10 * 60 * 1000,        // Cleanup every 10 minutes
-    RESULT_CACHE_SIZE: 50                     // Max cached search results
-  },
-  RATE_LIMIT: {
-    MAX_REQUESTS_PER_SECOND: 10,
-    REQUEST_BATCH_SIZE: 3
-  }
-};
-
-// ============================================================================
-// STATE MANAGEMENT
-// ============================================================================
+// In-memory storage for sensitive data (session-based)
 let authState = {
-  authenticated: false,
   vaultUrl: null,
-  token: null,
   namespace: null,
+  token: null,
   authType: null,
-  lastActivity: null,
-  tokenExpiry: null
+  authenticated: false,
+  lastActivity: null
 };
 
-// Active searches map (searchId -> searchState)
-const activeSearches = new Map();
+// Active searches
+let activeSearches = new Map();
 
-// KV2 mount cache (mount -> boolean)
-const kv2Cache = new Map();
+// Constants
+const TOKEN_EXPIRY_TIME = 12 * 60 * 60 * 1000; // 12 hours
+const ACTIVITY_CHECK_INTERVAL = 60 * 1000; // 1 minute
 
-// Rate limiting
-const requestQueue = [];
-let processingQueue = false;
-
-// ============================================================================
-// INITIALIZATION
-// ============================================================================
-
-// Restore auth state on service worker startup
+// Restore auth state on startup
 (async function restoreAuthState() {
   try {
     const result = await chrome.storage.local.get(['authState']);
-    if (result.authState) {
-      const state = result.authState;
+    if (result.authState && result.authState.authenticated) {
+      const timeSinceLastActivity = Date.now() - result.authState.lastActivity;
 
-      // Check if token is still valid
-      const now = Date.now();
-      if (state.tokenExpiry && now < state.tokenExpiry) {
-        authState = state;
-        console.log('[Background] Auth state restored');
+      // Only restore if not expired
+      if (timeSinceLastActivity < TOKEN_EXPIRY_TIME) {
+        authState = result.authState;
+        console.log('[Vault Search] Auth state restored from storage');
+
+        // Set badge
+        chrome.action.setBadgeText({ text: '✓' });
+        chrome.action.setBadgeBackgroundColor({ color: '#10b981' });
+
         startActivityMonitoring();
       } else {
-        console.log('[Background] Stored token expired');
-        await clearAuthData();
+        console.log('[Vault Search] Stored auth expired, clearing');
+        await chrome.storage.local.remove(['authState']);
       }
     }
   } catch (error) {
-    console.error('[Background] Failed to restore auth:', error);
+    console.error('[Vault Search] Error restoring auth state:', error);
   }
 })();
 
-// Start periodic cleanup
-setInterval(cleanupExpiredSearches, CONSTANTS.SEARCH.CLEANUP_INTERVAL);
+// Initialize
+chrome.runtime.onInstalled.addListener((details) => {
+  console.log('[Vault Search] Extension installed/updated', details);
 
-// ============================================================================
-// MESSAGE HANDLER
-// ============================================================================
-
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  console.log('[Background] Message received:', request.type);
-
-  // Handle messages asynchronously
-  handleMessage(request, sender)
-    .then(sendResponse)
-    .catch(error => {
-      console.error('[Background] Message handler error:', error);
-      sendResponse({ success: false, error: error.message });
-    });
-
-  return true; // Keep channel open for async response
+  if (details.reason === 'install') {
+    // Open popup on first install
+    chrome.action.openPopup();
+  }
 });
 
-/**
- * Route incoming messages to appropriate handlers
- */
-async function handleMessage(request, sender) {
-  const handlers = {
-    'CHECK_AUTH': handleCheckAuth,
-    'GET_AUTH': handleGetAuth,
-    'STORE_AUTH': handleStoreAuth,
-    'CLEAR_AUTH': handleClearAuth,
-    'REFRESH_TOKEN': handleRefreshToken,
-    'AUTH_TOKEN': handleAuthToken,
-    'AUTH_USERPASS': handleAuthUserPass,
-    'AUTH_LDAP': handleAuthLDAP,
-    'START_SEARCH': handleStartSearch,
-    'GET_SEARCH_RESULTS': handleGetSearchResults,
-    'CANCEL_SEARCH': handleCancelSearch,
-    'OPEN_RESULT': handleOpenResult
-  };
+// Message handler
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  console.log('[Vault Search] Received message:', request.type);
 
-  const handler = handlers[request.type];
+  switch (request.type) {
+    case 'STORE_AUTH':
+      handleStoreAuth(request.data).then(result => {
+        sendResponse(result);
+      });
+      return true; // Keep message channel open for async response
 
-  if (!handler) {
-    return { success: false, error: `Unknown message type: ${request.type}` };
+    case 'GET_AUTH':
+      sendResponse(getAuthData());
+      break;
+
+    case 'CHECK_AUTH':
+      sendResponse({ authenticated: authState.authenticated });
+      break;
+
+    case 'CHECK_CONNECTION':
+      sendResponse({
+        connected: authState.authenticated,
+        vaultUrl: authState.vaultUrl || ''
+      });
+      break;
+
+    case 'CLEAR_AUTH':
+      clearAuthData().then(result => {
+        sendResponse(result);
+      });
+      return true;
+
+    case 'DISCONNECT':
+      clearAuthData().then(result => {
+        sendResponse(result);
+      });
+      return true;
+
+    case 'REFRESH_TOKEN':
+      handleRefreshToken(request.data).then(result => {
+        sendResponse(result);
+      });
+      return true; // Keep message channel open for async response
+
+    case 'START_SEARCH':
+      handleStartSearch(request, sender).then(result => {
+        sendResponse(result);
+      });
+      return true;
+
+    case 'GET_SEARCH_RESULTS':
+      const searchData = activeSearches.get(request.searchId);
+      if (searchData) {
+        sendResponse({
+          success: true,
+          status: searchData.status,
+          results: searchData.results || [],
+          error: searchData.error
+        });
+      } else {
+        sendResponse({ success: false, status: 'not_found', results: [] });
+      }
+      break;
+
+    case 'GET_ACTIVE_SEARCH':
+      // Return the most recent active search
+      let activeSearchId = null;
+      let activeQuery = null;
+      for (const [searchId, data] of activeSearches.entries()) {
+        if (data.status === 'running') {
+          activeSearchId = searchId;
+          activeQuery = data.query;
+          break;
+        }
+      }
+      sendResponse({
+        success: true,
+        searchId: activeSearchId,
+        query: activeQuery
+      });
+      break;
+
+    case 'OPEN_RESULT':
+      handleOpenResult(request).then(result => {
+        sendResponse(result);
+      });
+      return true;
+
+    case 'AUTH_TOKEN':
+      handleAuthToken(request).then(result => {
+        sendResponse(result);
+      });
+      return true;
+
+    case 'AUTH_USERPASS':
+      handleAuthUserPass(request).then(result => {
+        sendResponse(result);
+      });
+      return true;
+
+    case 'AUTH_LDAP':
+      handleAuthLDAP(request).then(result => {
+        sendResponse(result);
+      });
+      return true;
+
+    case 'LOG':
+      console.log('[Vault Search]', ...request.data);
+      sendResponse({ success: true });
+      break;
+
+    default:
+      console.warn('[Vault Search] Unknown message type:', request.type);
+      sendResponse({ error: 'Unknown message type' });
   }
 
-  // Update activity timestamp
-  if (authState.authenticated) {
-    authState.lastActivity = Date.now();
+  return true; // Keep message channel open
+});
+
+// Store authentication data
+async function handleStoreAuth(data) {
+  authState = {
+    vaultUrl: data.vaultUrl,
+    namespace: data.namespace,
+    token: data.token,
+    authType: data.authType,
+    authenticated: true,
+    lastActivity: Date.now()
+  };
+
+  // Persist to storage
+  try {
+    await chrome.storage.local.set({ authState });
+    console.log('[Vault Search] Auth stored successfully to persistent storage');
+  } catch (error) {
+    console.error('[Vault Search] Error storing auth:', error);
   }
 
-  return await handler(request, sender);
+  // Set badge to indicate active connection
+  chrome.action.setBadgeText({ text: '✓' });
+  chrome.action.setBadgeBackgroundColor({ color: '#10b981' });
+
+  // Start activity monitoring
+  startActivityMonitoring();
+
+  return { success: true };
 }
 
-// ============================================================================
-// AUTH HANDLERS
-// ============================================================================
-
-async function handleCheckAuth() {
-  return {
-    authenticated: authState.authenticated,
-    authType: authState.authType,
-    vaultUrl: authState.vaultUrl
-  };
-}
-
-async function handleGetAuth() {
+// Get authentication data
+function getAuthData() {
   if (!authState.authenticated) {
-    return {
-      authenticated: false,
-      error: 'Not authenticated'
-    };
+    return { authenticated: false, error: 'Not authenticated' };
   }
 
-  // Check if token needs refresh
-  if (shouldRefreshToken()) {
-    await attemptTokenRefresh();
+  // Check if token has expired
+  const timeSinceLastActivity = Date.now() - authState.lastActivity;
+  if (timeSinceLastActivity > TOKEN_EXPIRY_TIME) {
+    console.log('[Vault Search] Token expired due to inactivity');
+    clearAuthData();
+    return { authenticated: false, error: 'Session expired' };
   }
+
+  // Update last activity
+  authState.lastActivity = Date.now();
+
+  // Update storage
+  chrome.storage.local.set({ authState }).catch(err => {
+    console.error('[Vault Search] Error updating auth activity:', err);
+  });
 
   return {
     authenticated: true,
     vaultUrl: authState.vaultUrl,
-    token: authState.token,
     namespace: authState.namespace,
+    token: authState.token,
     authType: authState.authType
   };
 }
 
-async function handleStoreAuth(request) {
+// Clear authentication data
+async function clearAuthData() {
+  authState = {
+    vaultUrl: null,
+    namespace: null,
+    token: null,
+    authType: null,
+    authenticated: false,
+    lastActivity: null
+  };
+
+  // Clear from storage
   try {
-    const { vaultUrl, token, authType, namespace } = request.data || request;
-
-    if (!vaultUrl || !token) {
-      return { success: false, error: 'Vault URL and token are required' };
-    }
-
-    // Verify token is valid
-    const isValid = await verifyToken(vaultUrl, token, namespace);
-    if (!isValid) {
-      return { success: false, error: 'Invalid token or insufficient permissions' };
-    }
-
-    // Store in memory
-    authState = {
-      authenticated: true,
-      vaultUrl,
-      token,
-      namespace: namespace || null,
-      authType: authType || 'token',
-      lastActivity: Date.now(),
-      tokenExpiry: Date.now() + CONSTANTS.AUTH.TOKEN_EXPIRY_TIME
-    };
-
-    // Persist to storage
-    await chrome.storage.local.set({ authState });
-
-    // Start activity monitoring
-    startActivityMonitoring();
-
-    console.log('[Background] Auth stored successfully');
-    return { success: true };
+    await chrome.storage.local.remove(['authState']);
+    console.log('[Vault Search] Auth cleared from storage');
   } catch (error) {
-    console.error('[Background] Store auth error:', error);
-    return { success: false, error: error.message };
+    console.error('[Vault Search] Error clearing auth:', error);
   }
-}
 
-async function handleClearAuth() {
-  await clearAuthData();
+  chrome.action.setBadgeText({ text: '' });
+  console.log('[Vault Search] Auth cleared');
+
   return { success: true };
 }
 
-async function handleRefreshToken(request) {
+// Refresh token (for renewable tokens)
+async function handleRefreshToken(data) {
   if (!authState.authenticated) {
     return { success: false, error: 'Not authenticated' };
   }
 
   try {
-    const isValid = await verifyToken(
-      authState.vaultUrl,
-      authState.token,
-      authState.namespace
-    );
+    const headers = {
+      'X-Vault-Token': authState.token,
+      'Content-Type': 'application/json'
+    };
 
-    if (isValid) {
-      // Token is still valid, update expiry
-      authState.tokenExpiry = Date.now() + CONSTANTS.AUTH.TOKEN_EXPIRY_TIME;
-      authState.lastActivity = Date.now();
-      await chrome.storage.local.set({ authState });
-      return { success: true };
-    } else {
-      // Token expired
-      await clearAuthData();
-      return { success: false, error: 'Token expired' };
+    if (authState.namespace) {
+      headers['X-Vault-Namespace'] = authState.namespace;
     }
+
+    const response = await fetch(`${authState.vaultUrl}/v1/auth/token/renew-self`, {
+      method: 'POST',
+      headers
+    });
+
+    if (!response.ok) {
+      throw new Error(`Token refresh failed: ${response.status}`);
+    }
+
+    const result = await response.json();
+    authState.token = result.auth.client_token;
+    authState.lastActivity = Date.now();
+
+    console.log('[Vault Search] Token refreshed successfully');
+    return { success: true };
+
   } catch (error) {
-    console.error('[Background] Token refresh error:', error);
+    console.error('[Vault Search] Token refresh error:', error);
     return { success: false, error: error.message };
   }
 }
 
-// ============================================================================
-// AUTH METHOD HANDLERS
-// ============================================================================
-
+// Handle token authentication
 async function handleAuthToken(request) {
   try {
-    const { vaultUrl, token, namespace } = request;
+    const { vaultUrl, token } = request;
 
     if (!vaultUrl || !token) {
       return { success: false, error: 'Vault URL and token are required' };
     }
 
-    const isValid = await verifyToken(vaultUrl, token, namespace);
-    if (!isValid) {
-      return { success: false, error: 'Invalid token or Vault URL' };
+    // Verify token by making a simple API call
+    const headers = { 'X-Vault-Token': token };
+    const response = await fetch(`${vaultUrl}/v1/sys/health`, { headers });
+
+    if (!response.ok && response.status !== 429 && response.status !== 503) {
+      throw new Error('Invalid token or Vault URL');
     }
 
+    // Store auth
     return await handleStoreAuth({
       vaultUrl,
       token,
       authType: 'token',
-      namespace
+      namespace: null
     });
   } catch (error) {
-    console.error('[Background] Token auth error:', error);
+    console.error('[Vault Search] Token auth error:', error);
     return { success: false, error: error.message };
   }
 }
 
+// Handle userpass authentication
 async function handleAuthUserPass(request) {
   try {
-    const { vaultUrl, username, password, mount, namespace } = request;
-    const userpassMount = mount || 'userpass';
+    const { vaultUrl, username, password } = request;
 
     if (!vaultUrl || !username || !password) {
       return { success: false, error: 'Vault URL, username, and password are required' };
     }
 
-    const headers = { 'Content-Type': 'application/json' };
-    if (namespace) headers['X-Vault-Namespace'] = namespace;
-
-    const response = await fetchWithRetry(
-      `${vaultUrl}/v1/auth/${userpassMount}/login/${username}`,
-      {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({ password })
-      },
-      2 // 2 retries
-    );
+    const response = await fetch(`${vaultUrl}/v1/auth/userpass/login/${username}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password })
+    });
 
     if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Authentication failed (${response.status}): ${errorText}`);
+      throw new Error(`Authentication failed: ${response.status}`);
     }
 
     const result = await response.json();
 
+    // Store auth
     return await handleStoreAuth({
       vaultUrl,
       token: result.auth.client_token,
       authType: 'userpass',
-      namespace
+      namespace: null
     });
   } catch (error) {
-    console.error('[Background] UserPass auth error:', error);
+    console.error('[Vault Search] UserPass auth error:', error);
     return { success: false, error: error.message };
   }
 }
 
+// Handle LDAP authentication
 async function handleAuthLDAP(request) {
   try {
-    const { vaultUrl, username, password, mount, namespace } = request;
-    const ldapMount = mount || 'ldap';
+    const { vaultUrl, username, password } = request;
 
     if (!vaultUrl || !username || !password) {
       return { success: false, error: 'Vault URL, username, and password are required' };
     }
 
-    const headers = { 'Content-Type': 'application/json' };
-    if (namespace) headers['X-Vault-Namespace'] = namespace;
-
-    const response = await fetchWithRetry(
-      `${vaultUrl}/v1/auth/${ldapMount}/login/${username}`,
-      {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({ password })
-      },
-      2
-    );
+    const response = await fetch(`${vaultUrl}/v1/auth/ldap/login/${username}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password })
+    });
 
     if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`LDAP authentication failed (${response.status}): ${errorText}`);
+      throw new Error(`Authentication failed: ${response.status}`);
     }
 
     const result = await response.json();
 
+    // Store auth
     return await handleStoreAuth({
       vaultUrl,
       token: result.auth.client_token,
       authType: 'ldap',
-      namespace
+      namespace: null
     });
   } catch (error) {
-    console.error('[Background] LDAP auth error:', error);
+    console.error('[Vault Search] LDAP auth error:', error);
     return { success: false, error: error.message };
   }
 }
 
-// ============================================================================
-// AUTH UTILITIES
-// ============================================================================
-
-async function verifyToken(vaultUrl, token, namespace) {
+// Handle opening a result
+async function handleOpenResult(request) {
   try {
-    const headers = { 'X-Vault-Token': token };
-    if (namespace) headers['X-Vault-Namespace'] = namespace;
+    const { path, resultType } = request;
 
-    const response = await fetch(`${vaultUrl}/v1/auth/token/lookup-self`, {
-      method: 'GET',
-      headers
+    if (!authState.authenticated) {
+      return { success: false, error: 'Not authenticated' };
+    }
+
+    // For directories, we could list contents (future enhancement)
+    // For now, just copy the path to clipboard
+    await navigator.clipboard.writeText(path);
+
+    // Send notification
+    chrome.notifications.create({
+      type: 'basic',
+      iconUrl: 'icon128.png',
+      title: 'Vault Search Pro',
+      message: `Path copied: ${path}`
     });
 
-    return response.ok;
+    return { success: true };
   } catch (error) {
-    console.error('[Background] Token verification error:', error);
-    return false;
+    console.error('[Vault Search] Open result error:', error);
+    return { success: false, error: error.message };
   }
 }
 
-function shouldRefreshToken() {
-  if (!authState.authenticated || !authState.tokenExpiry) {
-    return false;
-  }
-
-  const timeUntilExpiry = authState.tokenExpiry - Date.now();
-  return timeUntilExpiry < CONSTANTS.AUTH.TOKEN_REFRESH_THRESHOLD;
-}
-
-async function attemptTokenRefresh() {
-  console.log('[Background] Attempting token refresh');
-
-  const isValid = await verifyToken(
-    authState.vaultUrl,
-    authState.token,
-    authState.namespace
-  );
-
-  if (isValid) {
-    // Extend expiry
-    authState.tokenExpiry = Date.now() + CONSTANTS.AUTH.TOKEN_EXPIRY_TIME;
-    authState.lastActivity = Date.now();
-    await chrome.storage.local.set({ authState });
-    console.log('[Background] Token refreshed successfully');
-  } else {
-    console.log('[Background] Token refresh failed - token invalid');
-    await clearAuthData();
-  }
-}
-
-async function clearAuthData() {
-  authState = {
-    authenticated: false,
-    vaultUrl: null,
-    token: null,
-    namespace: null,
-    authType: null,
-    lastActivity: null,
-    tokenExpiry: null
-  };
-
-  await chrome.storage.local.remove('authState');
-  kv2Cache.clear();
-  activeSearches.clear();
-
-  console.log('[Background] Auth data cleared');
-}
-
-function getAuthData() {
-  return {
-    authenticated: authState.authenticated,
-    vaultUrl: authState.vaultUrl,
-    token: authState.token,
-    namespace: authState.namespace
-  };
-}
-
-// ============================================================================
-// SEARCH HANDLERS
-// ============================================================================
-
+// Handle search in background (continues even if popup closes)
 async function handleStartSearch(request, sender) {
   const searchId = `search_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
@@ -456,22 +438,9 @@ async function handleStartSearch(request, sender) {
     return { success: false, error: 'Not authenticated' };
   }
 
-  // Extract search parameters
-  const data = request.data || request;
-  const searchTerm = data.term || data.query || '';
-  const options = data.options || {
-    caseInsensitive: true,
-    exactMatch: false
-  };
-
-  if (!searchTerm) {
-    return { success: false, error: 'Search term is required' };
-  }
-
-  console.log(`[Background] Starting search ${searchId}:`, {
-    term: searchTerm,
-    options
-  });
+  // Extract search parameters (support both formats)
+  const searchTerm = request.query || request.data?.term || '';
+  const options = request.options || {};
 
   // Initialize search state
   activeSearches.set(searchId, {
@@ -480,13 +449,10 @@ async function handleStartSearch(request, sender) {
     progress: 0,
     error: null,
     query: searchTerm,
-    options,
-    startTime: Date.now(),
-    mountsSearched: 0,
-    totalMounts: 0
+    options
   });
 
-  // Start search in background (don't block response)
+  // Start search in background (don't await)
   performBackgroundSearch(searchId, {
     term: searchTerm,
     vaultUrl: auth.vaultUrl,
@@ -494,7 +460,7 @@ async function handleStartSearch(request, sender) {
     namespace: auth.namespace,
     options
   }).catch(error => {
-    console.error('[Background] Search error:', error);
+    console.error('[Vault Search] Background search error:', error);
     const searchState = activeSearches.get(searchId);
     if (searchState) {
       searchState.status = 'error';
@@ -505,228 +471,85 @@ async function handleStartSearch(request, sender) {
   return { success: true, searchId };
 }
 
-async function handleGetSearchResults(request) {
-  const { searchId } = request;
-
-  if (!searchId) {
-    return { success: false, error: 'Search ID is required' };
-  }
-
-  const searchState = activeSearches.get(searchId);
-
-  if (!searchState) {
-    return {
-      success: false,
-      status: 'not_found',
-      error: 'Search not found or expired'
-    };
-  }
-
-  return {
-    success: true,
-    status: searchState.status,
-    results: searchState.results,
-    progress: searchState.progress,
-    error: searchState.error,
-    query: searchState.query,
-    mountsSearched: searchState.mountsSearched,
-    totalMounts: searchState.totalMounts
-  };
-}
-
-async function handleCancelSearch(request) {
-  const { searchId } = request;
-
-  if (!searchId) {
-    return { success: false, error: 'Search ID is required' };
-  }
-
-  const searchState = activeSearches.get(searchId);
-
-  if (searchState) {
-    searchState.status = 'cancelled';
-    activeSearches.delete(searchId);
-    console.log(`[Background] Search ${searchId} cancelled`);
-  }
-
-  return { success: true };
-}
-
-// ============================================================================
-// SEARCH ENGINE
-// ============================================================================
-
-/**
- * Perform comprehensive background search across all KV mounts
- */
-async function performBackgroundSearch(searchId, { term, vaultUrl, token, namespace, options }) {
+// Perform comprehensive search in background
+async function performBackgroundSearch(searchId, { term, vaultUrl, token, namespace }) {
   const searchState = activeSearches.get(searchId);
   if (!searchState) return;
 
-  const startTime = Date.now();
-
   try {
-    console.log(`[Background] Executing search ${searchId}`);
+    const results = [];
 
     // List all mounts
-    const mounts = await listKVMounts(vaultUrl, token, namespace);
-    searchState.totalMounts = mounts.length;
+    const mountsUrl = `${vaultUrl}/v1/sys/mounts`;
+    const headers = { 'X-Vault-Token': token };
+    if (namespace) headers['X-Vault-Namespace'] = namespace;
 
-    console.log(`[Background] Found ${mounts.length} KV mounts to search`);
-
-    if (mounts.length === 0) {
-      searchState.status = 'completed';
-      searchState.progress = 100;
-      return;
+    const mountsResponse = await fetch(mountsUrl, { headers });
+    if (!mountsResponse.ok) {
+      throw new Error(`Failed to list mounts: ${mountsResponse.statusText}`);
     }
 
-    // Search mounts in batches for better control
-    const batchSize = CONSTANTS.SEARCH.MAX_CONCURRENT_MOUNTS;
-    let allResults = [];
+    const mountsData = await mountsResponse.json();
+    const kvMounts = Object.entries(mountsData.data || {})
+      .filter(([_, v]) => v.type === 'kv' || v.type === 'generic')
+      .map(([k]) => k);
 
-    for (let i = 0; i < mounts.length; i += batchSize) {
-      // Check if search was cancelled
-      if (searchState.status === 'cancelled') {
-        console.log(`[Background] Search ${searchId} was cancelled`);
-        return;
+    // Search all mounts in parallel
+    const searchPromises = kvMounts.map(mount =>
+      searchMount(vaultUrl, token, namespace, mount, term, searchState)
+    );
+
+    const mountResults = await Promise.allSettled(searchPromises);
+
+    // Collect all results
+    mountResults.forEach(result => {
+      if (result.status === 'fulfilled' && result.value) {
+        results.push(...result.value);
       }
+    });
 
-      const batch = mounts.slice(i, i + batchSize);
-
-      // Search batch in parallel
-      const batchPromises = batch.map(mount =>
-        searchMount(vaultUrl, token, namespace, mount, term, options, searchState)
-          .catch(error => {
-            console.error(`[Background] Error searching mount ${mount}:`, error);
-            return []; // Return empty array on error
-          })
-      );
-
-      const batchResults = await Promise.allSettled(batchPromises);
-
-      // Collect results
-      batchResults.forEach(result => {
-        if (result.status === 'fulfilled' && result.value) {
-          allResults.push(...result.value);
-        }
-      });
-
-      // Update progress
-      searchState.mountsSearched = Math.min(i + batchSize, mounts.length);
-      searchState.progress = Math.floor((searchState.mountsSearched / mounts.length) * 100);
-      searchState.results = allResults;
-
-      console.log(`[Background] Progress: ${searchState.mountsSearched}/${mounts.length} mounts`);
-    }
-
-    // Search complete
+    // Update final state
     searchState.status = 'completed';
+    searchState.results = results;
     searchState.progress = 100;
-    searchState.results = deduplicateResults(allResults);
 
-    const duration = Date.now() - startTime;
-    console.log(`[Background] Search ${searchId} completed in ${duration}ms with ${searchState.results.length} results`);
-
-    // Auto-cleanup after timeout
+    // Auto-cleanup after 5 minutes
     setTimeout(() => {
       activeSearches.delete(searchId);
-      console.log(`[Background] Search ${searchId} cleaned up`);
-    }, CONSTANTS.SEARCH.SEARCH_TIMEOUT);
+    }, 5 * 60 * 1000);
 
   } catch (error) {
-    console.error(`[Background] Search ${searchId} failed:`, error);
     searchState.status = 'error';
     searchState.error = error.message;
   }
 }
 
-/**
- * List all KV mounts in Vault
- */
-async function listKVMounts(vaultUrl, token, namespace) {
-  try {
-    const headers = { 'X-Vault-Token': token };
-    if (namespace) headers['X-Vault-Namespace'] = namespace;
-
-    const response = await fetchWithRetry(`${vaultUrl}/v1/sys/mounts`, { headers });
-
-    if (!response.ok) {
-      throw new Error(`Failed to list mounts: ${response.status}`);
-    }
-
-    const data = await response.json();
-    const mounts = Object.entries(data.data || data)
-      .filter(([_, mountData]) => {
-        const type = mountData.type || '';
-        return type === 'kv' || type === 'generic';
-      })
-      .map(([mountPath]) => mountPath);
-
-    return mounts;
-  } catch (error) {
-    console.error('[Background] List mounts error:', error);
-    return [];
-  }
-}
-
-/**
- * Search a single mount for matching secrets
- */
-async function searchMount(vaultUrl, token, namespace, mount, term, options, searchState) {
+// Search a single mount
+async function searchMount(vaultUrl, token, namespace, mount, term, searchState) {
   const results = [];
   const headers = { 'X-Vault-Token': token };
   if (namespace) headers['X-Vault-Namespace'] = namespace;
 
   try {
-    console.log(`[Background] Searching mount: ${mount}`);
-
     // List all paths recursively
-    const paths = await listAllPaths(
-      vaultUrl,
-      token,
-      namespace,
-      mount,
-      '',
-      CONSTANTS.SEARCH.MAX_DEPTH
-    );
-
-    console.log(`[Background] Found ${paths.length} paths in ${mount}`);
-
-    // Prepare search term based on options
-    const searchTerm = options.caseInsensitive ? term.toLowerCase() : term;
+    const paths = await listAllPaths(vaultUrl, token, namespace, mount, '', 10);
 
     for (const pathObj of paths) {
-      // Respect result limits
-      if (results.length >= CONSTANTS.SEARCH.MAX_RESULTS_PER_MOUNT) {
-        console.log(`[Background] Result limit reached for mount ${mount}`);
-        break;
-      }
-
-      // Check if search was cancelled
-      if (searchState.status === 'cancelled') {
-        break;
-      }
-
       const path = typeof pathObj === 'string' ? pathObj : pathObj.path;
       const pathType = typeof pathObj === 'string' ? 'file' : pathObj.type;
       const fullPath = `${mount}${path}`;
+      const lowerTerm = term.toLowerCase();
+      const lowerPath = fullPath.toLowerCase();
 
-      // Prepare path for matching
-      const matchPath = options.caseInsensitive ? fullPath.toLowerCase() : fullPath;
-
-      // Check path match
-      let pathMatches = false;
-
-      if (options.exactMatch) {
-        pathMatches = matchPath === searchTerm;
-      } else {
-        pathMatches = matchPath.includes(searchTerm) || fuzzyMatch(matchPath, searchTerm);
-      }
+      // Check if path matches (any match type)
+      const pathMatches = lowerPath.includes(lowerTerm) ||
+                         fuzzyMatch(lowerPath, lowerTerm) ||
+                         fullPath === term;
 
       if (pathMatches) {
+        // Remove trailing slash for display
         const displayPath = path.endsWith('/') ? path.slice(0, -1) : path;
         const displayFullPath = `${mount}${displayPath}`;
-
         results.push({
           path: displayFullPath,
           mount: mount,
@@ -737,83 +560,53 @@ async function searchMount(vaultUrl, token, namespace, mount, term, options, sea
         });
       }
 
-      // Search content for files only (not directories)
+      // Only search content for files, not directories
       if (pathType !== 'directory') {
+        // Try to read secret and search content
         try {
-          const contentMatches = await searchSecretContent(
-            vaultUrl,
-            token,
-            namespace,
-            mount,
-            path,
-            searchTerm,
-            options
-          );
+        const isKv2 = await checkIfKv2(vaultUrl, token, namespace, mount);
+        const dataPath = isKv2 ? `${mount}data/${path}` : `${mount}${path}`;
+        const secretUrl = `${vaultUrl}/v1/${dataPath}`;
 
-          if (contentMatches.length > 0) {
-            results.push({
-              path: fullPath,
-              mount: mount,
-              type: 'content',
-              url: `${vaultUrl}/ui/vault/secrets/${mount}/show/${path}`,
-              matchType: 'content',
-              matches: contentMatches.slice(0, 3) // Limit displayed matches
-            });
+        const secretResponse = await fetch(secretUrl, { headers });
+        if (secretResponse.ok) {
+          const secretData = await secretResponse.json();
+          const data = isKv2 ? secretData.data?.data : secretData.data;
+
+          if (data) {
+            const matches = searchInData(data, term);
+            if (matches.length > 0) {
+              results.push({
+                path: fullPath,
+                mount: mount,
+                type: 'content',
+                url: `${vaultUrl}/ui/vault/secrets/${mount}/show/${path}`,
+                matchType: 'content',
+                matches: matches.slice(0, 3)
+              });
+            }
           }
-        } catch (error) {
-          // Skip secrets we can't read
         }
+      } catch (e) {
+        // Skip secrets we can't read
       }
     }
 
+      // Update progress
+      if (searchState) {
+        searchState.results = results;
+      }
+    }
   } catch (error) {
-    console.error(`[Background] Error searching mount ${mount}:`, error);
+    console.error(`[Vault Search] Error searching mount ${mount}:`, error);
   }
 
   return results;
 }
 
-/**
- * Search secret content for matches
- */
-async function searchSecretContent(vaultUrl, token, namespace, mount, path, term, options) {
-  try {
-    const headers = { 'X-Vault-Token': token };
-    if (namespace) headers['X-Vault-Namespace'] = namespace;
-
-    // Check if KV2
-    const isKv2 = await checkIfKv2(vaultUrl, token, namespace, mount);
-    const dataPath = isKv2 ? `${mount}data/${path}` : `${mount}${path}`;
-    const secretUrl = `${vaultUrl}/v1/${dataPath}`;
-
-    const response = await fetchWithTimeout(secretUrl, { headers }, 5000);
-
-    if (!response.ok) {
-      return [];
-    }
-
-    const secretData = await response.json();
-    const data = isKv2 ? secretData.data?.data : secretData.data;
-
-    if (!data) {
-      return [];
-    }
-
-    return searchInData(data, term, options);
-  } catch (error) {
-    // Silent fail - secret might not be readable
-    return [];
-  }
-}
-
-/**
- * List all paths recursively in a mount
- */
+// List all paths recursively
 async function listAllPaths(vaultUrl, token, namespace, mount, prefix, maxDepth, depth = 0) {
-  if (depth >= maxDepth) {
-    console.log(`[Background] Max depth ${maxDepth} reached at ${mount}${prefix}`);
-    return [];
-  }
+  if (depth >= maxDepth) return [];
 
   const paths = [];
   const headers = { 'X-Vault-Token': token };
@@ -825,36 +618,22 @@ async function listAllPaths(vaultUrl, token, namespace, mount, prefix, maxDepth,
     const listPath = isKv2 ? `${mount}metadata/${prefix}` : `${mount}${prefix}`;
     const listUrl = `${vaultUrl}/v1/${listPath}?list=true`;
 
-    const response = await fetchWithTimeout(listUrl, { headers }, 5000);
-
-    if (!response.ok) {
-      return [];
-    }
+    const response = await fetch(listUrl, { headers });
+    if (!response.ok) return [];
 
     const data = await response.json();
     const keys = data.data?.keys || [];
 
-    // Process directories and files
     for (const key of keys) {
       const fullPath = prefix + key;
-
       if (key.endsWith('/')) {
-        // Directory
+        // Directory - ADD to results (this was missing!)
         paths.push({
           path: fullPath,
           type: 'directory'
         });
-
-        // Recurse into subdirectory
-        const subPaths = await listAllPaths(
-          vaultUrl,
-          token,
-          namespace,
-          mount,
-          fullPath,
-          maxDepth,
-          depth + 1
-        );
+        // Then recurse into subdirectories
+        const subPaths = await listAllPaths(vaultUrl, token, namespace, mount, fullPath, maxDepth, depth + 1);
         paths.push(...subPaths);
       } else {
         // File
@@ -864,18 +643,14 @@ async function listAllPaths(vaultUrl, token, namespace, mount, prefix, maxDepth,
         });
       }
     }
-  } catch (error) {
-    // Silent fail - might not have list permissions
+  } catch (e) {
+    // Skip paths we can't list
   }
 
   return paths;
-}
-
-/**
- * Check if mount is KV version 2 (with caching)
- */
+}// Check if mount is KV2
+const kv2Cache = new Map();
 async function checkIfKv2(vaultUrl, token, namespace, mount) {
-  // Check cache first
   if (kv2Cache.has(mount)) {
     return kv2Cache.get(mount);
   }
@@ -884,19 +659,14 @@ async function checkIfKv2(vaultUrl, token, namespace, mount) {
     const headers = { 'X-Vault-Token': token };
     if (namespace) headers['X-Vault-Namespace'] = namespace;
 
-    const response = await fetchWithTimeout(
-      `${vaultUrl}/v1/sys/internal/ui/mounts/${mount}`,
-      { headers },
-      3000
-    );
-
+    const response = await fetch(`${vaultUrl}/v1/sys/internal/ui/mounts/${mount}`, { headers });
     if (response.ok) {
       const data = await response.json();
       const isKv2 = data.data?.options?.version === '2';
       kv2Cache.set(mount, isKv2);
       return isKv2;
     }
-  } catch (error) {
+  } catch (e) {
     // Assume KV1 if we can't determine
   }
 
@@ -904,37 +674,24 @@ async function checkIfKv2(vaultUrl, token, namespace, mount) {
   return false;
 }
 
-/**
- * Search within secret data
- */
-function searchInData(data, term, options) {
+// Search within secret data
+function searchInData(data, term) {
   const matches = [];
-  const searchTerm = options.caseInsensitive ? term.toLowerCase() : term;
+  const lowerTerm = term.toLowerCase();
 
   function searchObject(obj, path = '') {
     for (const [key, value] of Object.entries(obj)) {
       const currentPath = path ? `${path}.${key}` : key;
-      const matchKey = options.caseInsensitive ? key.toLowerCase() : key;
-      const valueStr = String(value);
-      const matchValue = options.caseInsensitive ? valueStr.toLowerCase() : valueStr;
+      const lowerKey = key.toLowerCase();
+      const valueStr = String(value).toLowerCase();
 
-      let keyMatches = false;
-      let valueMatches = false;
-
-      if (options.exactMatch) {
-        keyMatches = matchKey === searchTerm;
-        valueMatches = matchValue === searchTerm;
-      } else {
-        keyMatches = matchKey.includes(searchTerm) || fuzzyMatch(matchKey, searchTerm);
-        valueMatches = matchValue.includes(searchTerm) || fuzzyMatch(matchValue, searchTerm);
+      if (lowerKey.includes(lowerTerm) ||
+          fuzzyMatch(lowerKey, lowerTerm) ||
+          valueStr.includes(lowerTerm) ||
+          fuzzyMatch(valueStr, lowerTerm)) {
+        matches.push(`${currentPath}: ${String(value).substring(0, 100)}`);
       }
 
-      if (keyMatches || valueMatches) {
-        const truncatedValue = valueStr.length > 100 ? valueStr.substring(0, 100) + '...' : valueStr;
-        matches.push(`${currentPath}: ${truncatedValue}`);
-      }
-
-      // Recurse into nested objects
       if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
         searchObject(value, currentPath);
       }
@@ -945,13 +702,7 @@ function searchInData(data, term, options) {
   return matches;
 }
 
-// ============================================================================
-// SEARCH UTILITIES
-// ============================================================================
-
-/**
- * Fuzzy match algorithm
- */
+// Fuzzy match helper
 function fuzzyMatch(str, pattern) {
   if (pattern.length > str.length) return false;
   if (pattern === str) return true;
@@ -969,135 +720,7 @@ function fuzzyMatch(str, pattern) {
   return patternIdx === pattern.length;
 }
 
-/**
- * Deduplicate search results
- */
-function deduplicateResults(results) {
-  const seen = new Map();
-
-  return results.filter(result => {
-    const key = `${result.path}_${result.matchType}`;
-    if (seen.has(key)) {
-      return false;
-    }
-    seen.set(key, true);
-    return true;
-  });
-}
-
-/**
- * Clean up expired searches
- */
-function cleanupExpiredSearches() {
-  const now = Date.now();
-  const expiredSearches = [];
-
-  for (const [searchId, searchState] of activeSearches.entries()) {
-    const age = now - searchState.startTime;
-
-    // Remove searches older than timeout
-    if (age > CONSTANTS.SEARCH.SEARCH_TIMEOUT) {
-      expiredSearches.push(searchId);
-    }
-  }
-
-  expiredSearches.forEach(searchId => {
-    activeSearches.delete(searchId);
-    console.log(`[Background] Cleaned up expired search: ${searchId}`);
-  });
-
-  if (expiredSearches.length > 0) {
-    console.log(`[Background] Cleaned up ${expiredSearches.length} expired searches`);
-  }
-}
-
-// ============================================================================
-// NETWORK UTILITIES
-// ============================================================================
-
-/**
- * Fetch with timeout
- */
-async function fetchWithTimeout(url, options, timeoutMs = 10000) {
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
-
-  try {
-    const response = await fetch(url, {
-      ...options,
-      signal: controller.signal
-    });
-    return response;
-  } finally {
-    clearTimeout(timeoutId);
-  }
-}
-
-/**
- * Fetch with retry logic
- */
-async function fetchWithRetry(url, options, maxRetries = 2) {
-  let lastError;
-
-  for (let attempt = 0; attempt <= maxRetries; attempt++) {
-    try {
-      const response = await fetchWithTimeout(url, options, 10000);
-      return response;
-    } catch (error) {
-      lastError = error;
-
-      if (attempt < maxRetries) {
-        // Exponential backoff
-        const delay = Math.min(1000 * Math.pow(2, attempt), 5000);
-        await new Promise(resolve => setTimeout(resolve, delay));
-        console.log(`[Background] Retry ${attempt + 1}/${maxRetries} for ${url}`);
-      }
-    }
-  }
-
-  throw lastError;
-}
-
-// ============================================================================
-// MISC HANDLERS
-// ============================================================================
-
-async function handleOpenResult(request) {
-  try {
-    const { path, url } = request;
-
-    if (!authState.authenticated) {
-      return { success: false, error: 'Not authenticated' };
-    }
-
-    // Copy path to clipboard
-    await navigator.clipboard.writeText(path);
-
-    // Show notification
-    chrome.notifications.create({
-      type: 'basic',
-      iconUrl: 'icon128.png',
-      title: 'Vault Search',
-      message: `Path copied: ${path}`,
-      priority: 0
-    });
-
-    // Open in new tab if URL provided
-    if (url) {
-      chrome.tabs.create({ url });
-    }
-
-    return { success: true };
-  } catch (error) {
-    console.error('[Background] Open result error:', error);
-    return { success: false, error: error.message };
-  }
-}
-
-// ============================================================================
-// ACTIVITY MONITORING
-// ============================================================================
-
+// Monitor activity and expire sessions
 let activityCheckInterval = null;
 
 function startActivityMonitoring() {
@@ -1106,14 +729,14 @@ function startActivityMonitoring() {
   }
 
   activityCheckInterval = setInterval(() => {
-    if (authState.authenticated && authState.tokenExpiry) {
-      const now = Date.now();
+    if (authState.authenticated) {
+      const timeSinceLastActivity = Date.now() - authState.lastActivity;
 
-      // Check token expiry
-      if (now >= authState.tokenExpiry) {
-        console.log('[Background] Session expired due to token expiry');
+      if (timeSinceLastActivity > TOKEN_EXPIRY_TIME) {
+        console.log('[Vault Search] Session expired due to inactivity');
         clearAuthData();
 
+        // Notify user
         chrome.notifications.create({
           type: 'basic',
           iconUrl: 'icon128.png',
@@ -1122,18 +745,11 @@ function startActivityMonitoring() {
           priority: 1
         });
       }
-      // Check if refresh needed
-      else if (shouldRefreshToken()) {
-        attemptTokenRefresh();
-      }
     }
-  }, CONSTANTS.AUTH.ACTIVITY_CHECK_INTERVAL);
+  }, ACTIVITY_CHECK_INTERVAL);
 }
 
-// ============================================================================
-// CONTEXT MENU
-// ============================================================================
-
+// Context menu for quick access
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
     id: 'vault-search-settings',
@@ -1146,8 +762,6 @@ chrome.runtime.onInstalled.addListener(() => {
     title: 'Disconnect',
     contexts: ['action']
   });
-
-  console.log('[Background] Extension installed/updated');
 });
 
 chrome.contextMenus.onClicked.addListener((info) => {
@@ -1165,9 +779,9 @@ chrome.contextMenus.onClicked.addListener((info) => {
   }
 });
 
-// ============================================================================
-// LOGGING
-// ============================================================================
+// Listen for storage changes (from popup)
+chrome.storage.onChanged.addListener((changes, namespace) => {
+  console.log('[Vault Search] Storage changed:', changes);
+});
 
-console.log('[Background] Service worker initialized');
-console.log('[Background] Auth state:', authState.authenticated ? 'Authenticated' : 'Not authenticated');
+console.log('[Vault Search] Background service worker initialized');
