@@ -10,8 +10,8 @@
 A powerful, enterprise-ready Chrome extension that provides lightning-fast search capabilities for HashiCorp Vault with **persistent Side Panel UI**, multi-auth support, intelligent path scanning, and deep value search.
 
 
-🌐 **[Try the Interactive Demo →](https://sachdev27.github.io/vault-search-pro/demo.html)**
- Website: [https://sachdev27.github.io/vault-search-pro](https://sachdev27.github.io/vault-search-pro)
+🌐 **[Try the Interactive Demo](https://sachdev27.github.io/vault-search-pro/demo.html)** //
+**[Website](https://sachdev27.github.io/vault-search-pro)**
 
 ---
 
