@@ -1,9 +1,8 @@
 /**
- * Vault Search Extension - Background Service Worker
+ * Vault Secret Search - Background Service Worker
  * Author: Sandesh Sachdev
- * Version: 2.1.0
- *
- * Handles authentication state management, token storage, and message passing
+ * Version: 2.3.0
+ * Description: Background service worker for managing search operations
  */
 
 // In-memory storage for sensitive data (session-based)

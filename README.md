@@ -358,6 +358,8 @@ Copyright (c) 2025 Sandesh Sachdev
 - GitHub: [@sandeshsachdev](https://github.com/sandeshsachdev)
 - Email: [your-email@example.com]
 
+☕ **Support this project**: [Buy me a coffee](https://buymeacoffee.com/sachdevst)
+
 ---
 
 ## 🙏 Acknowledgments

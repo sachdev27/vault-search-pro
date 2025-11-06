@@ -1,9 +1,8 @@
 /**
- * Vault Search Extension - Content Script
+ * Vault Secret Search - Content Script
  * Author: Sandesh Sachdev
- * Version: 2.0.0
- *
- * Provides blazing-fast path-first search for HashiCorp Vault with deep value scanning
+ * Version: 2.3.0
+ * Description: Injects search UI overlay into Vault pages
  */
 
 function log(...args){ console.debug("[Vault UI Search]", ...args); }
@@ -457,5 +456,5 @@ function flattenAll(data, prefix = '') {
     }
   });
 
-  log("Injected v2.2.0 by Sandesh Sachdev. Button is top-right. Press Ctrl/Cmd+Shift+K to open. Path-first scan streams results immediately; deep scan follows.");
+  log("Injected v2.3.0 by Sandesh Sachdev. Button is top-right. Press Ctrl/Cmd+Shift+K to open. Path-first scan streams results immediately; deep scan follows.");
 })();

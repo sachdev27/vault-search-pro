@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Vault Search Pro",
-  "version": "2.3.1",
+  "version": "2.3.0",
   "description": "HashiCorp Vault search with persistent auth, background search, and comprehensive results",
   "author": "Sandesh Sachdev",
   "homepage_url": "https://github.com/sachdev27",
