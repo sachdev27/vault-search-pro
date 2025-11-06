@@ -1,0 +1,43 @@
+{
+  "name": "vault-search-pro",
+  "version": "2.0.0",
+  "description": "Production-grade Chrome extension for blazing-fast HashiCorp Vault secret search",
+  "author": "Sandesh Sachdev",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sandeshsachdev/vault-search-extension.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sandeshsachdev/vault-search-extension/issues"
+  },
+  "homepage": "https://github.com/sandeshsachdev/vault-search-extension#readme",
+  "keywords": [
+    "vault",
+    "hashicorp",
+    "security",
+    "secrets",
+    "chrome-extension",
+    "search",
+    "kv",
+    "ldap",
+    "authentication"
+  ],
+  "scripts": {
+    "build": "node scripts/build.js",
+    "package": "node scripts/package.js",
+    "lint": "eslint *.js",
+    "format": "prettier --write \"**/*.{js,html,css,json,md}\"",
+    "validate": "node scripts/validate.js",
+    "version": "node scripts/version.js",
+    "release": "npm run validate && npm run build && npm run package"
+  },
+  "devDependencies": {
+    "archiver": "^6.0.1",
+    "eslint": "^8.50.0",
+    "prettier": "^3.0.3"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
