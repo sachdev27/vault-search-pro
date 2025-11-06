@@ -35,7 +35,7 @@ if [[ -n $(git status -s) ]]; then
     echo ""
     read -p "Do you want to commit these changes? (y/n) " -n 1 -r
     echo ""
-    
+
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         read -p "Enter commit message: " commit_msg
         git add docs/

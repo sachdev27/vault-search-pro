@@ -164,5 +164,5 @@ Future versions may include:
 ---
 
 **Author**: Sandesh Sachdev
-**Repository**: https://github.com/sandeshsachdev/vault-search-pro
+**Repository**: https://github.com/sachdev27/vault-search-pro
 **License**: MIT

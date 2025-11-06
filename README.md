@@ -1,6 +1,6 @@
 # 🔐 Vault Search Pro
 
-[![Version](https://img.shields.io/badge/version-2.3.0-blue.svg)](https://github.com/sandeshsachdev/vault-search-pro)
+[![Version](https://img.shields.io/badge/version-2.3.0-blue.svg)](https://github.com/sachdev27/vault-search-pro)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Chrome](https://img.shields.io/badge/chrome-extension-orange.svg)](https://chrome.google.com/webstore)
 [![Live Demo](https://img.shields.io/badge/demo-live-success.svg)](https://sachdev27.github.io/vault-advance-search/)
@@ -9,7 +9,7 @@
 
 A powerful, enterprise-ready Chrome extension that provides lightning-fast search capabilities for HashiCorp Vault with **persistent Side Panel UI**, multi-auth support, intelligent path scanning, and deep value search.
 
-**Created by [Sandesh Sachdev](https://github.com/sandeshsachdev)**
+**Created by [Sandesh Sachdev](https://github.com/sachdev27)**
 
 🌐 **[Try the Interactive Demo →](https://sachdev27.github.io/vault-advance-search/)**
 
@@ -84,7 +84,7 @@ A powerful, enterprise-ready Chrome extension that provides lightning-fast searc
 ### Manual Installation (Developer Mode)
 1. **Clone or Download**:
    ```bash
-   git clone https://github.com/sandeshsachdev/vault-search-pro.git
+   git clone https://github.com/sachdev27/vault-search-pro.git
    cd vault-search-pro
    ```
 
@@ -308,7 +308,7 @@ Contributions are welcome! Please follow these steps:
 
 ```bash
 # Clone the repo
-git clone https://github.com/sandeshsachdev/vault-search-pro.git
+git clone https://github.com/sachdev27/vault-search-pro.git
 cd vault-search-pro
 
 # Load in Chrome (Developer mode)
@@ -358,7 +358,7 @@ Copyright (c) 2025 Sandesh Sachdev
 
 **Sandesh Sachdev**
 
-- GitHub: [@sandeshsachdev](https://github.com/sandeshsachdev)
+- GitHub: [@sachdev27](https://github.com/sachdev27)
 - Email: [your-email@example.com]
 
 ☕ **Support this project**: [Buy me a coffee](https://buymeacoffee.com/sachdevst)
@@ -376,7 +376,7 @@ Copyright (c) 2025 Sandesh Sachdev
 ## 🌐 Live Demo
 
 Check out the interactive demo and marketing page at:
-**[https://sandeshsachdev.github.io/vault-search-pro](https://sandeshsachdev.github.io/vault-search-pro)**
+**[https://sachdev27.github.io/vault-search-pro](https://sachdev27.github.io/vault-search-pro)**
 
 The demo page features:
 - Interactive popup preview with tab switching
@@ -402,8 +402,8 @@ GitHub Pages will automatically deploy within 1-2 minutes.
 
 ## 📬 Support
 
-- **Issues**: [GitHub Issues](https://github.com/sandeshsachdev/vault-search-pro/issues)
-- **Questions**: [GitHub Discussions](https://github.com/sandeshsachdev/vault-search-pro/discussions)
+- **Issues**: [GitHub Issues](https://github.com/sachdev27/vault-search-pro/issues)
+- **Questions**: [GitHub Discussions](https://github.com/sachdev27/vault-search-pro/discussions)
 - **Email**: [your-email@example.com]
 
 ---

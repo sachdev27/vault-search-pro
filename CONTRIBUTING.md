@@ -220,4 +220,4 @@ Thank you for contributing! 🎉
 ---
 
 **Maintainer**: Sandesh Sachdev
-**Contact**: [GitHub](https://github.com/sandeshsachdev)
+**Contact**: [GitHub](https://github.com/sachdev27)
