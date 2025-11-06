@@ -59,7 +59,7 @@
 ### 🚨 Known Limitations
 
 **Popup Closing Behavior:**
-Chrome browser popups automatically close when clicking outside the popup window. This is **standard browser behavior enforced for security reasons** and cannot be overridden by extensions. 
+Chrome browser popups automatically close when clicking outside the popup window. This is **standard browser behavior enforced for security reasons** and cannot be overridden by extensions.
 
 **Workaround:** Use the Search Vault button on actual Vault pages for a modal experience that stays open.
 

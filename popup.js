@@ -23,7 +23,6 @@ const connectionText = document.getElementById('connectionText');
 
 // Search elements
 const searchTermInput = document.getElementById('searchTerm');
-const searchModeSelect = document.getElementById('searchMode');
 const caseInsensitiveCheckbox = document.getElementById('caseInsensitive');
 const searchBtn = document.getElementById('searchBtn');
 const searchStatus = document.getElementById('searchStatus');
@@ -32,6 +31,8 @@ const searchConnectionDot = document.getElementById('searchConnectionDot');
 const searchConnectionText = document.getElementById('searchConnectionText');
 
 let currentAuthType = 'token';
+let currentSearchId = null;
+let searchPollingInterval = null;
 
 // Save form state before popup closes
 window.addEventListener('beforeunload', () => {
@@ -513,10 +514,15 @@ async function handleSearch() {
     return;
   }
 
+  // Clear previous search polling
+  if (searchPollingInterval) {
+    clearInterval(searchPollingInterval);
+  }
+
   searchBtn.disabled = true;
-  searchBtn.innerHTML = '🔄 Searching...';
+  searchBtn.innerHTML = '🔄 Starting search...';
   searchResults.innerHTML = '';
-  showSearchStatus('<span class="spinner-inline"></span> Searching...', 'info');
+  showSearchStatus('<span class="spinner-inline"></span> Starting background search...', 'info');
 
   try {
     // Get auth from background
@@ -530,212 +536,88 @@ async function handleSearch() {
     }
 
     const { vaultUrl, token, namespace } = authResponse;
-    const mode = searchModeSelect.value;
-    const caseInsensitive = caseInsensitiveCheckbox.checked;
 
-    // Perform search using the search logic
-    const results = await performVaultSearch(vaultUrl, token, namespace, term, mode, caseInsensitive);
+    // Start search in background
+    const searchResponse = await chrome.runtime.sendMessage({
+      type: 'START_SEARCH',
+      data: { term, vaultUrl, token, namespace }
+    });
 
-    displaySearchResults(results);
-    showSearchStatus(`Found ${results.length} result(s)`, 'success');
+    if (searchResponse.success) {
+      currentSearchId = searchResponse.searchId;
+
+      showSearchStatus('<span class="spinner-inline"></span> Search running in background... (you can close this popup)', 'info');
+      searchBtn.innerHTML = '⏸️ Searching...';
+
+      // Poll for results
+      searchPollingInterval = setInterval(async () => {
+        await pollSearchResults();
+      }, 1000); // Check every second
+
+      // Initial poll
+      await pollSearchResults();
+    } else {
+      throw new Error('Failed to start search');
+    }
 
   } catch (error) {
     console.error('Search error:', error);
     showSearchStatus(`Error: ${error.message}`, 'error');
-  } finally {
     searchBtn.disabled = false;
     searchBtn.innerHTML = '🔍 Search Vault';
   }
 }
 
-// Perform vault search
-async function performVaultSearch(vaultUrl, token, namespace, term, mode, caseInsensitive) {
-  const results = [];
-
-  // List all mounts
-  const mountsUrl = `${vaultUrl}/v1/sys/mounts`;
-  const headers = {
-    'X-Vault-Token': token,
-  };
-  if (namespace) {
-    headers['X-Vault-Namespace'] = namespace;
-  }
-
-  const mountsResponse = await fetch(mountsUrl, { headers });
-  if (!mountsResponse.ok) {
-    throw new Error(`Failed to list mounts: ${mountsResponse.statusText}`);
-  }
-
-  const mountsData = await mountsResponse.json();
-  const kvMounts = Object.entries(mountsData.data || {}).filter(([_, v]) =>
-    v.type === 'kv' || v.type === 'generic'
-  );
-
-  // Search through mounts (limit to first 100 paths for popup performance)
-  let pathsChecked = 0;
-  const maxPaths = 100;
-
-  for (const [mount] of kvMounts) {
-    if (pathsChecked >= maxPaths) break;
-
-    try {
-      const paths = await listPathsRecursive(vaultUrl, token, namespace, mount, '', 3); // Limit depth to 3
-
-      for (const path of paths) {
-        if (pathsChecked >= maxPaths) break;
-        pathsChecked++;
-
-        const fullPath = `${mount}${path}`;
-
-        // Check if path matches search term
-        if (matchesSearch(fullPath, term, mode, caseInsensitive)) {
-          results.push({
-            path: fullPath,
-            mount: mount,
-            type: 'path',
-            url: `${vaultUrl}/ui/vault/secrets/${mount}/show/${path}`
-          });
-        }
-
-        // Also try to read the secret and search in keys/values (but limit this)
-        if (results.length < 20) {
-          try {
-            const secret = await readSecret(vaultUrl, token, namespace, mount, path);
-            if (secret && searchInSecret(secret, term, mode, caseInsensitive)) {
-              if (!results.find(r => r.path === fullPath)) {
-                results.push({
-                  path: fullPath,
-                  mount: mount,
-                  type: 'content',
-                  url: `${vaultUrl}/ui/vault/secrets/${mount}/show/${path}`,
-                  matches: extractMatches(secret, term, mode, caseInsensitive)
-                });
-              }
-            }
-          } catch (e) {
-            // Skip secrets we can't read
-          }
-        }
-      }
-    } catch (e) {
-      console.error(`Error searching mount ${mount}:`, e);
-    }
-  }
-
-  return results;
-}
-
-// Helper: List paths recursively
-async function listPathsRecursive(vaultUrl, token, namespace, mount, path, maxDepth, currentDepth = 0) {
-  if (currentDepth >= maxDepth) return [];
-
-  const paths = [];
-  const listUrl = `${vaultUrl}/v1/${mount}metadata/${path}?list=true`;
-  const headers = {
-    'X-Vault-Token': token,
-  };
-  if (namespace) {
-    headers['X-Vault-Namespace'] = namespace;
-  }
+// Poll for search results from background
+async function pollSearchResults() {
+  if (!currentSearchId) return;
 
   try {
-    const response = await fetch(listUrl, { headers });
-    if (!response.ok) return [];
+    const response = await chrome.runtime.sendMessage({
+      type: 'GET_SEARCH_RESULTS',
+      searchId: currentSearchId
+    });
 
-    const data = await response.json();
-    const keys = data.data?.keys || [];
-
-    for (const key of keys) {
-      const fullPath = path + key;
-      if (key.endsWith('/')) {
-        // Directory
-        const subPaths = await listPathsRecursive(vaultUrl, token, namespace, mount, fullPath, maxDepth, currentDepth + 1);
-        paths.push(...subPaths);
-      } else {
-        // File
-        paths.push(fullPath);
+    if (response.status === 'not_found') {
+      // Search expired or doesn't exist
+      if (searchPollingInterval) {
+        clearInterval(searchPollingInterval);
       }
+      showSearchStatus('Search expired. Please try again.', 'error');
+      searchBtn.disabled = false;
+      searchBtn.innerHTML = '🔍 Search Vault';
+      return;
     }
-  } catch (e) {
-    // Skip paths we can't list
-  }
 
-  return paths;
-}
+    // Update results display
+    displaySearchResults(response.results || []);
 
-// Helper: Read secret
-async function readSecret(vaultUrl, token, namespace, mount, path) {
-  const readUrl = `${vaultUrl}/v1/${mount}data/${path}`;
-  const headers = {
-    'X-Vault-Token': token,
-  };
-  if (namespace) {
-    headers['X-Vault-Namespace'] = namespace;
-  }
-
-  const response = await fetch(readUrl, { headers });
-  if (!response.ok) return null;
-
-  const data = await response.json();
-  return data.data?.data;
-}
-
-// Helper: Check if text matches search
-function matchesSearch(text, term, mode, caseInsensitive) {
-  const t = caseInsensitive ? text.toLowerCase() : text;
-  const s = caseInsensitive ? term.toLowerCase() : term;
-
-  if (mode === 'exact') {
-    return t === s;
-  } else if (mode === 'substring') {
-    return t.includes(s);
-  } else {
-    // Fuzzy
-    return t.includes(s) || levenshteinDistance(t, s) < 5;
-  }
-}
-
-// Helper: Search in secret data
-function searchInSecret(data, term, mode, caseInsensitive) {
-  const searchStr = JSON.stringify(data);
-  return matchesSearch(searchStr, term, mode, caseInsensitive);
-}
-
-// Helper: Extract matches from secret
-function extractMatches(data, term, mode, caseInsensitive) {
-  const matches = [];
-  for (const [key, value] of Object.entries(data)) {
-    if (matchesSearch(key, term, mode, caseInsensitive) ||
-        matchesSearch(String(value), term, mode, caseInsensitive)) {
-      matches.push(`${key}: ${String(value).substring(0, 50)}`);
-    }
-  }
-  return matches.slice(0, 3);
-}
-
-// Helper: Levenshtein distance for fuzzy matching
-function levenshteinDistance(a, b) {
-  const matrix = [];
-  for (let i = 0; i <= b.length; i++) {
-    matrix[i] = [i];
-  }
-  for (let j = 0; j <= a.length; j++) {
-    matrix[0][j] = j;
-  }
-  for (let i = 1; i <= b.length; i++) {
-    for (let j = 1; j <= a.length; j++) {
-      if (b.charAt(i - 1) === a.charAt(j - 1)) {
-        matrix[i][j] = matrix[i - 1][j - 1];
-      } else {
-        matrix[i][j] = Math.min(
-          matrix[i - 1][j - 1] + 1,
-          matrix[i][j - 1] + 1,
-          matrix[i - 1][j] + 1
-        );
+    if (response.status === 'completed') {
+      // Search complete
+      if (searchPollingInterval) {
+        clearInterval(searchPollingInterval);
       }
+      showSearchStatus(`✅ Search complete! Found ${response.results.length} result(s)`, 'success');
+      searchBtn.disabled = false;
+      searchBtn.innerHTML = '🔍 Search Vault';
+    } else if (response.status === 'error') {
+      // Search error
+      if (searchPollingInterval) {
+        clearInterval(searchPollingInterval);
+      }
+      showSearchStatus(`Error: ${response.error}`, 'error');
+      searchBtn.disabled = false;
+      searchBtn.innerHTML = '🔍 Search Vault';
+    } else {
+      // Still running - update status
+      showSearchStatus(
+        `<span class="spinner-inline"></span> Found ${response.results.length} result(s) so far... (search continues in background)`,
+        'info'
+      );
     }
+  } catch (error) {
+    console.error('Error polling results:', error);
   }
-  return matrix[b.length][a.length];
 }
 
 // Display search results
@@ -743,17 +625,32 @@ function displaySearchResults(results) {
   searchResults.innerHTML = '';
 
   if (results.length === 0) {
-    searchResults.innerHTML = '<div class="result-item"><div class="detail">No results found</div></div>';
+    searchResults.innerHTML = '<div class="result-item"><div class="detail">Searching... Results will appear here</div></div>';
     return;
   }
 
+  // Remove duplicates by path
+  const uniqueResults = [];
+  const seenPaths = new Set();
+
   for (const result of results) {
+    if (!seenPaths.has(result.path)) {
+      seenPaths.add(result.path);
+      uniqueResults.push(result);
+    }
+  }
+
+  for (const result of uniqueResults) {
     const div = document.createElement('div');
     div.className = 'result-item';
+
+    const matchBadge = result.matchType === 'path'
+      ? '<span style="background: #f0f0f0; padding: 2px 6px; border-radius: 3px; font-size: 11px; margin-left: 8px;">PATH</span>'
+      : '<span style="background: #f0f0f0; padding: 2px 6px; border-radius: 3px; font-size: 11px; margin-left: 8px;">CONTENT</span>';
+
     div.innerHTML = `
-      <div class="path">${result.path}</div>
-      <div class="detail">${result.type === 'path' ? 'Path match' : 'Content match'}</div>
-      ${result.matches ? `<div class="detail" style="margin-top: 4px;">${result.matches.join(', ')}</div>` : ''}
+      <div class="path">${result.path}${matchBadge}</div>
+      ${result.matches ? `<div class="detail" style="margin-top: 4px; font-size: 11px;">${result.matches.join(' • ')}</div>` : ''}
     `;
     div.addEventListener('click', () => {
       chrome.tabs.create({ url: result.url });
@@ -767,9 +664,12 @@ function showSearchStatus(message, type) {
   searchStatus.innerHTML = message;
   searchStatus.className = `search-status ${type}`;
 
-  if (type !== 'error') {
+  // Don't auto-hide for running searches
+  if (type === 'success' || (type === 'error' && !message.includes('Search running'))) {
     setTimeout(() => {
-      searchStatus.innerHTML = '';
+      if (searchStatus.innerHTML === message) { // Only clear if message hasn't changed
+        searchStatus.innerHTML = '';
+      }
     }, 5000);
   }
 }

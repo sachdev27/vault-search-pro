@@ -1,9 +1,11 @@
 {
   "manifest_version": 3,
   "name": "Vault Search Pro",
-  "version": "2.1.0",
-  "description": "Production-grade HashiCorp Vault search with multi-auth support, universal search from anywhere, and minimal black-on-white design.",
+  "version": "2.2.0",
+  "description": "HashiCorp Vault search with persistent auth, background search, and comprehensive results",
   "author": "Sandesh Sachdev",
+  "homepage_url": "https://github.com/sachdev27",
+
   "icons": {
     "32": "icon32.png",
     "64": "icon64.png",

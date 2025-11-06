@@ -457,5 +457,5 @@ function flattenAll(data, prefix = '') {
     }
   });
 
-  log("Injected v2.1.0 by Sandesh Sachdev. Button is top-right. Press Ctrl/Cmd+Shift+K to open. Path-first scan streams results immediately; deep scan follows.");
+  log("Injected v2.2.0 by Sandesh Sachdev. Button is top-right. Press Ctrl/Cmd+Shift+K to open. Path-first scan streams results immediately; deep scan follows.");
 })();
