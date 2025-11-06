@@ -3,14 +3,13 @@
 [![Version](https://img.shields.io/badge/version-2.3.0-blue.svg)](https://github.com/sachdev27/vault-search-pro)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Chrome](https://img.shields.io/badge/chrome-extension-orange.svg)](https://chrome.google.com/webstore)
-[![Live Demo](https://img.shields.io/badge/demo-live-success.svg)](https://sachdev27.github.io/vault-advance-search/)
+[![Live Demo](https://img.shields.io/badge/demo-live-success.svg)](https://sachdev27.github.io/vault-search-pro/)
 
-> **Production-grade Chrome extension with industry-standard persistent UI for HashiCorp Vault secret search**
+> **Lightning-fast Chrome extension for HashiCorp Vault secret search**
 
-A powerful, enterprise-ready Chrome extension that provides lightning-fast search capabilities for HashiCorp Vault with **persistent Side Panel UI**, multi-auth support, intelligent path scanning, and deep value search.
+A powerful Chrome extension that provides instant search capabilities across HashiCorp Vault with **persistent search state**, multi-auth support, and real-time results streaming.
 
 <img width="1792" height="758" alt="SCR-20251106-slua" src="https://github.com/user-attachments/assets/8575fd89-a686-4e9e-9727-848a0e8c1b0c" />
-
 
 🌐 **[Try the Interactive Demo](https://sachdev27.github.io/vault-search-pro/demo.html)** //
 **[Website](https://sachdev27.github.io/vault-search-pro)**
@@ -19,71 +18,42 @@ A powerful, enterprise-ready Chrome extension that provides lightning-fast searc
 
 ## ✨ Features
 
-### 🎯 Side Panel UI (NEW in v2.3.0)
-- **�️ Industry-Grade Persistent Interface**
-  - Never disappears when clicking outside (unlike popups)
-  - Dockable panel that stays visible across tabs
-  - Background search continues even when minimized
-  - Session tracking for multiple searches
-  - Minimize/expand controls for workflow flexibility
-  - Professional developer experience
-
-### �🚀 Core Capabilities
-- **⚡ Two-Phase Search Engine**
-  - Phase A: Ultra-fast path-only scanning (instant results)
-  - Phase B: Deep value search on candidate paths
-  - Streams results to UI in real-time
-
-- **🔑 Multiple Authentication Methods**
-  - **Token-based auth**: Direct Vault token authentication
-  - **UserPass (Basic Auth)**: Username/password authentication
-  - **LDAP**: Enterprise LDAP integration
-  - Persistent authentication (12-hour session)
-
-- **🎯 Background Search Engine**
-  - Searches continue in background service worker
-  - Results persist when panel is closed/minimized
-  - Resume active searches on panel reopen
-  - Multiple concurrent search tracking
-
-### 🛡️ Security & Enterprise Features
-- **Persistent Auth Storage**: chrome.storage.local with 12-hour expiry
-- **Token Refresh**: Automatic token renewal support
-- **Session Management**: Activity-based timeout
-- **Namespace Support**: Full Vault namespace compatibility
-- **CSP Compliant**: Content Security Policy enforced
-- **No Password Storage**: Passwords never saved (security best practice)
-
-### 🎨 User Experience
-- **Intelligent Search Modes**:
-  - Contains (default)
-  - Case-sensitive search
-  - Directory path search
-  - Content value search
+### 🔍 Smart Search
+- **Popup Interface**: Quick access via browser toolbar
+- **Persistent Search State**: Resume searches when reopening popup
 - **Real-time Results**: Results stream as they're found
-- **Mount Filtering**: Search across all KV mounts
-- **Prefix Filtering**: Narrow scope to path prefixes
-- **Keyboard Shortcuts**: `Ctrl/Cmd + Shift + K` to open
-- **Dark Mode**: Automatic theme detection
-- **Responsive Design**: Works on all screen sizes
+- **Search Options**:
+  - Exact match filtering
+  - Case-insensitive search (default)
+- **Content Script Integration**: Search overlay on Vault UI pages
+- **Keyboard Shortcut**: `Ctrl/Cmd + Shift + K` to open overlay
 
-### ⚙️ Advanced Configuration
-- **Adjustable Workers**: 8-64 concurrent workers (default: 48)
-- **Configurable Depth**: Control JSON traversal depth
-- **Custom Timeouts**: Request timeout configuration
-- **Case Sensitivity**: Toggle case-insensitive search
-- **KV1/KV2 Auto-Detection**: Seamless version detection
+### 🔑 Multiple Authentication Methods
+- **Token Auth**: Direct Vault token authentication
+- **UserPass (Basic Auth)**: Username/password authentication
+- **LDAP**: Enterprise LDAP integration
+- **Persistent Sessions**: Stay logged in across browser restarts
+- **Secure Storage**: Credentials stored locally in browser
+
+### 🎯 Background Search Engine
+- **Service Worker**: Searches run in background
+- **Result Caching**: Results persist when popup closes
+- **Resume Capability**: Continue searches after reopening
+- **Cancel Anytime**: Stop searches mid-flight
+
+### 🛡️ Security Features
+- **Local Storage**: All credentials stay in your browser
+- **No External Transmission**: Direct Vault API communication only
+- **Session Timeouts**: Auto-logout for security
+- **CSP Compliant**: Content Security Policy enforced
+- **No Password Storage**: Passwords never saved (token-based only)
 
 ---
 
 ## 📦 Installation
 
-### From Chrome Web Store (Recommended)
-1. Visit the [Chrome Web Store](https://chrome.google.com/webstore) (link coming soon)
-2. Click "Add to Chrome"
-3. Click the extension icon to configure
-
 ### Manual Installation (Developer Mode)
+
 1. **Clone or Download**:
    ```bash
    git clone https://github.com/sachdev27/vault-search-pro.git
@@ -105,86 +75,35 @@ A powerful, enterprise-ready Chrome extension that provides lightning-fast searc
 
 ## 🚀 Quick Start
 
-### Method 1: Configure via Popup (Standalone)
+### Method 1: Popup Search
 
 1. **Click the Extension Icon** in your Chrome toolbar
 
-2. **Enter Vault Details**:
+2. **Configure Settings Tab**:
    - Vault URL: `https://vault.example.com`
-   - Namespace: (optional, e.g., `admin/team`)
+   - Namespace: (optional, e.g., `admin/`)
+   - Choose auth method (Token/Basic Auth/LDAP)
+   - Enter credentials
+   - Click "Save Settings"
 
-3. **Choose Authentication**:
-   - **Token Tab**: Paste your Vault token
-   - **Basic Auth Tab**: Enter username/password
-   - **LDAP Tab**: Enter LDAP credentials
+3. **Search Tab**:
+   - Enter your search term
+   - Toggle "Exact match" if needed (case-insensitive by default)
+   - Click "Start Search"
+   - Results appear in real-time
+   - Click "Cancel" to stop anytime
 
-4. **Save & Connect**: Check "Remember me" and click "Save & Connect"
+4. **Persistent State**:
+   - Close popup during search → search continues
+   - Reopen popup → see accumulated results
+   - Cancel button remains functional
 
-5. **Start Searching**: Visit any Vault UI page or use the floating button
-
-### Method 2: Use with Vault UI (Legacy)
+### Method 2: Vault UI Overlay
 
 1. **Log into Vault UI** at `https://your-vault.com/ui/`
-2. **Click "Search Vault"** button (top-right) or press `Ctrl/Cmd + Shift + K`
-3. **Enter search term** and configure options
-4. **View Results** as they stream in
-
----
-
-## 📖 Usage Guide
-
-### Search Interface
-
-```
-┌─────────────────────────────────────────────┐
-│  Universal Search                    [Close] │
-├─────────────────────────────────────────────┤
-│  Search term: [password            ]         │
-│  Mode: [Contains ▼]  ☑ Case-insensitive    │
-├─────────────────────────────────────────────┤
-│  Max depth: [10]  Workers: [48]             │
-│  Mount filter: [secret/]                    │
-│  Prefix filter: [prod/]                     │
-├─────────────────────────────────────────────┤
-│  [Cancel]  [Search]  Status: Ready          │
-├─────────────────────────────────────────────┤
-│  📋 Results appear here...                   │
-└─────────────────────────────────────────────┘
-```
-
-### Search Modes
-
-**Contains** (Default):
-```
-Search: "pass" → Matches: "password", "bypass", "compass"
-```
-
-**Exact**:
-```
-Search: "password" → Only matches: "password"
-```
-
-**Regex**:
-```
-Search: "pass(word|phrase)" → Matches: "password", "passphrase"
-```
-
-**Fuzzy** (Similarity threshold: 0.8):
-```
-Search: "pasword" → Matches: "password" (typo tolerance)
-```
-
-### Filtering
-
-**Mount Filter**: Limit search to specific mount points
-```
-Mount filter: "secret/" → Only searches secret/ mount
-```
-
-**Prefix Filter**: Narrow to specific path prefixes
-```
-Prefix filter: "prod/" → Only searches paths starting with prod/
-```
+2. **Press `Ctrl/Cmd + Shift + K`** or click floating button (top-right)
+3. **Search overlay appears** over Vault UI
+4. **Enter search term** and view results
 
 ---
 
@@ -193,26 +112,14 @@ Prefix filter: "prod/" → Only searches paths starting with prod/
 ### Settings Storage
 
 The extension uses `chrome.storage.sync` for:
+
 - Vault URL (persisted)
 - Namespace (persisted)
 - Authentication type (persisted)
 - Remember me preference (persisted)
 - Username (if Remember Me enabled)
-- Mount paths (if Remember Me enabled)
 
 **Security Note**: Passwords and tokens are NEVER persisted when "Remember me" is checked. They are only stored in session memory.
-
-### Advanced Options
-
-**Worker Count** (8-64, default: 48):
-- Higher = Faster but more network load
-- Lower = Gentler on Vault server
-- Recommended: 16-24 for rate-limited environments
-
-**Max Depth** (1-50, default: 10):
-- Controls how deep to traverse nested JSON
-- Higher values find more but take longer
-- Adjust based on your secret structure
 
 ---
 
@@ -234,32 +141,33 @@ The extension uses `chrome.storage.sync` for:
 
 ### Files
 
-- **`manifest.json`**: Extension configuration (MV3)
-- **`background.js`**: Service worker for auth and state management
-- **`popup.html/js`**: Settings and authentication UI
-- **`content.js`**: Main search engine and UI injection
-- **`ui.css`**: Styling for search interface
-- **`utils.js`**: Utility functions, validators, helpers
+- **`manifest.json`**: Extension configuration (Manifest V3)
+- **`background.js`**: Service worker for search operations and auth management
+- **`popup.html/popup.js`**: Extension popup UI with Settings and Search tabs
+- **`content.js`**: Search overlay injection into Vault UI pages
+- **`ui.css`**: Styling for content script search interface
 
 ---
 
 ## 🔒 Security Considerations
 
 ### What We Do
+
 ✅ Session-only token storage (in-memory)
-✅ 12-hour automatic session expiry
 ✅ CSP (Content Security Policy) enforcement
 ✅ Input validation and sanitization
-✅ HTTPS-only Vault connections (configurable)
+✅ HTTPS-only Vault connections (recommended)
 ✅ No analytics or telemetry
 
 ### What We Don't Do
+
 ❌ Never store passwords persistently
 ❌ Never send data to third parties
 ❌ No external API calls
 ❌ No tracking or user profiling
 
 ### Best Practices
+
 1. **Use token auth when possible** (most secure)
 2. **Enable "Remember me" only on trusted devices**
 3. **Regularly rotate Vault tokens**
@@ -273,26 +181,32 @@ The extension uses `chrome.storage.sync` for:
 ### Common Issues
 
 **Issue**: "Not authenticated" error
+
 - **Solution**: Click extension icon and configure connection
 
 **Issue**: "Permission denied" on some paths
+
 - **Solution**: Check your Vault policies and token capabilities
 
 **Issue**: Search is slow
-- **Solution**: Reduce worker count or add mount/prefix filters
+
+- **Solution**: Reduce concurrent requests or check Vault server performance
 
 **Issue**: Token expired
+
 - **Solution**: Re-authenticate via popup
 
 **Issue**: Results not showing
+
 - **Solution**: Check browser console (F12) for errors
 
 ### Debug Mode
 
 Enable detailed logging:
+
 1. Open DevTools (F12)
 2. Go to Console tab
-3. Look for `[Vault UI Search]` messages
+3. Look for `[Vault Search]` messages
 
 ---
 
@@ -326,25 +240,24 @@ cd vault-search-pro
 
 ## 📝 Changelog
 
-### Version 2.0.0 (2025-11-06)
+### Version 2.3.0 (Latest)
+
+- ✨ **NEW**: Enhanced search result streaming
+- ✨ **NEW**: Improved popup UI persistence
+- ✨ **NEW**: Better session state management
+- 🎨 **UI**: Refined popup interface
+- 🐛 **FIX**: Various bug fixes and performance improvements
+
+### Version 2.0.0
+
 - ✨ **NEW**: Standalone authentication system with popup UI
 - ✨ **NEW**: Multi-auth support (Token, UserPass, LDAP)
 - ✨ **NEW**: Remember me functionality
 - ✨ **NEW**: Background service worker for state management
-- ✨ **NEW**: Token refresh and session management
-- ✨ **NEW**: Enhanced UI with animations and dark mode
+- ✨ **NEW**: Enhanced UI with animations
 - ✨ **NEW**: Keyboard shortcuts (Ctrl/Cmd+Shift+K)
 - 🔒 **SECURITY**: CSP implementation
 - 🔒 **SECURITY**: Input validation and sanitization
-- 🎨 **UI**: Complete redesign with modern aesthetics
-- 📚 **DOCS**: Comprehensive documentation and README
-- 🐛 **FIX**: Various bug fixes and improvements
-
-### Version 1.3.0 (Previous)
-- Two-phase search engine
-- Path-first scanning
-- Higher concurrency (48 workers)
-- Mount and prefix filters
 
 ---
 
@@ -361,7 +274,6 @@ Copyright (c) 2025 Sandesh Sachdev
 **Sandesh Sachdev**
 
 - GitHub: [@sachdev27](https://github.com/sachdev27)
-- Email: [your-email@example.com]
 
 ☕ **Support this project**: [Buy me a coffee](https://buymeacoffee.com/sachdevst)
 
@@ -378,9 +290,11 @@ Copyright (c) 2025 Sandesh Sachdev
 ## 🌐 Live Demo
 
 Check out the interactive demo and marketing page at:
+
 **[https://sachdev27.github.io/vault-search-pro](https://sachdev27.github.io/vault-search-pro)**
 
 The demo page features:
+
 - Interactive popup preview with tab switching
 - Live result streaming animation
 - Complete feature showcase
@@ -390,7 +304,7 @@ The demo page features:
 
 The website is hosted from the `docs/` folder. To update:
 
-1. Make changes to files in `docs/` (index.html, styles.css, script.js)
+1. Make changes to files in `docs/` (index.html, demo.html, styles.css, etc.)
 2. Commit and push to GitHub
 3. Enable GitHub Pages in repository settings:
    - Go to **Settings** → **Pages**
@@ -406,7 +320,6 @@ GitHub Pages will automatically deploy within 1-2 minutes.
 
 - **Issues**: [GitHub Issues](https://github.com/sachdev27/vault-search-pro/issues)
 - **Questions**: [GitHub Discussions](https://github.com/sachdev27/vault-search-pro/discussions)
-- **Email**: [your-email@example.com]
 
 ---
 

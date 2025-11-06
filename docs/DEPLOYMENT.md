@@ -44,7 +44,7 @@ The `docs/` folder contains a fully-featured marketing website for the Vault Sea
 3. **Wait for deployment** (1-2 minutes)
    - GitHub will automatically build and deploy your site
    - You'll see a green checkmark when ready
-   - Your site will be live at: `https://sachdev27.github.io/vault-advance-search/`
+   - Your site will be live at: `https://sachdev27.github.io/vault-search-pro/`
 
 ### Updating the Site
 
@@ -235,7 +235,7 @@ Improve search engine visibility:
    ```
    User-agent: *
    Allow: /
-   Sitemap: https://sachdev27.github.io/vault-advance-search/sitemap.xml
+   Sitemap: https://sachdev27.github.io/vault-search-pro/sitemap.xml
    ```
 
 ## 🚀 Performance Tips

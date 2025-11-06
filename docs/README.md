@@ -4,8 +4,8 @@ This folder contains the GitHub Pages marketing site and interactive demo for th
 
 ## 🌐 Live Site
 
-**Main Site**: https://sachdev27.github.io/vault-advance-search/
-**Interactive Demo**: https://sachdev27.github.io/vault-advance-search/demo.html
+**Main Site**: https://sachdev27.github.io/vault-search-pro/
+**Interactive Demo**: https://sachdev27.github.io/vault-search-pro/demo.html
 
 ## 📁 Files
 
