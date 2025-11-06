@@ -1,0 +1,171 @@
+{
+  "rootFolder": "/Users/sachdevs/Projects/Vault Search Extension",
+  "analyzedAt": "2025-11-06T10:48:52.771Z",
+  "rootStructure": [
+    {
+      "name": "README.md",
+      "type": "file",
+      "size": 487,
+      "lines": 15
+    },
+    {
+      "name": "content.js",
+      "type": "file",
+      "size": 18243,
+      "lines": 409
+    },
+    {
+      "name": "icon128.png",
+      "type": "file",
+      "size": 440,
+      "lines": 4
+    },
+    {
+      "name": "icon16.png",
+      "type": "file",
+      "size": 121,
+      "lines": 4
+    },
+    {
+      "name": "icon48.png",
+      "type": "file",
+      "size": 184,
+      "lines": 3
+    },
+    {
+      "name": "manifest.json",
+      "type": "file",
+      "size": 648,
+      "lines": 35
+    },
+    {
+      "name": "ui.css",
+      "type": "file",
+      "size": 1713,
+      "lines": 25
+    }
+  ],
+  "rootFileSnippets": {
+    "README.md": [
+      "",
+      "# Vault UI Search (MV3) — v1.3.0",
+      "",
+      "**Speed-focused**:",
+      "- Two-phase engine: **Phase A path-only (very fast)** then **Phase B deep on candidates**.",
+      "- Streams results to the panel as they arrive.",
+      "- Higher default concurrency (**48 workers**) + request timeouts.",
+      "- Optional **mount** and **prefix** filters to narrow scope.",
+      "",
+      "**UI**:"
+    ],
+    "content.js": [
+      "",
+      "function log(...args){ console.debug(\"[Vault UI Search]\", ...args); }",
+      "",
+      "// Matchers",
+      "function fuzzyRatio(a, b) {",
+      "const x = (a || \"\").toLowerCase();",
+      "const y = (b || \"\").toLowerCase();",
+      "if (!x || !y) return 0;",
+      "const bigrams = s => new Set([...s].map((_, i) => s.slice(i, i + 2)).filter(t => t.length === 2));",
+      "const xb = bigrams(x), yb = bigrams(y);"
+    ],
+    "icon128.png": [
+      "�PNG",
+      "\u001a",
+      "\u0000\u0000\u0000\rIHDR\u0000\u0000\u0000�\u0000\u0000\u0000�\b\u0006\u0000\u0000\u0000�>a�\u0000\u0000\u0001IDATx��Ա\r�@\u0014\u0005�3r\u0003&�",
+      "L���\u0001\u0019-@��\u0005p\u0012;\u0013�.���-�m�\f�.�\u000f`��x�_ϙw�c��c�a\u0001����Q\u0006���\u0016 N\u0000q\u0002�\u0013@�\u0000�\u0004\u0010'�8\u0001�\t N\u0000q\u0002�\u0013@�\u0000�\u0004\u0010'�8\u0001�\t N\u0000q\u0002�\u0013@�\u0000�\u0004\u0010'�8\u0001�\t N\u0000q\u0002�\u0013@�\u0000�\u0004\u0010'�8\u0001�\t N\u0000q\u0002�\u0013@�\u0000�\u0004\u0010'�8\u0001�\t N\u0000q\u0002�\u0013@�\u0000�\u0004\u0010'�8\u0001�\t N\u0000q\u0002�\u0013@�\u0000�\u0004\u0010'�8\u0001�\t N\u0000q\u0002�\u0013@�\u0000�\u0004\u0010'�8\u0001�\t N\u0000q\u0002�\u0013@�\u0000�\u0004\u0010'�8\u0001�\t N\u0000q\u0002�\u0013@�\u0000�\u0004\u0010'�8\u0001�\t N\u0000q\u0002�\u0013@�\u0000�\u0004\u0010'�8\u0001�\t N\u0000q\u0002�\u0013@�\u0000�\u0004\u0010'�8\u0001�\t N\u0000q\u0002�\u0013@�\u0000�\u0004\u0010'�8\u0001�\t N\u0000q\u0002�\u0013@�\u0000�\u0004\u0010'�8\u0001�\t N\u0000q\u0002�\u0013@�\u0000�\u0004\u0010'�����~=g��$\u0016 n�n�g�\u0011�c\u0001⾿\\\fP��L\u0000\u0000\u0000\u0000IEND�B`�"
+    ],
+    "icon16.png": [
+      "�PNG",
+      "\u001a",
+      "\u0000\u0000\u0000\rIHDR\u0000\u0000\u0000\u0010\u0000\u0000\u0000\u0010\b\u0006\u0000\u0000\u0000\u001f��a\u0000\u0000\u0000@IDATx�c\u0014�P��@\u0001`�D3\u0003\u0003\u0003\u0003\u000b����\r�4",
+      "IjP�\u0005�&�\u0002�.��\u0005�\u0006\f\u0006\u00030�\u0001�)�b\u00170\u000exn\u0004\u0000�y\u000bp\r�Y�\u0000\u0000\u0000\u0000IEND�B`�"
+    ],
+    "icon48.png": [
+      "�PNG",
+      "\u001a",
+      "\u0000\u0000\u0000\rIHDR\u0000\u0000\u00000\u0000\u0000\u00000\b\u0006\u0000\u0000\u0000W\u0002��\u0000\u0000\u0000IDATx��ڡ\u0011�0\u0010\u0000�\u000fC\u0003��\u0002�\u001a:��\u0002���\u0018��̭����K�0-g$��\u0003���ño�\u001c���\u001a\u0011�@U˾��)�7`\u0000�\u0000�\u00014\u0003h\u0006�\f�\u0019@3�f\u0000�\u0000�\u00014\u0003h\u0006�\f�\u0019@3�f\u0000�\u0000�\u0001��;q�\u0017��\u001b(�V�]\t�\u000b��|\u001f8\u0000\u0000\u0000\u0000IEND�B`�"
+    ],
+    "manifest.json": [
+      "{",
+      "\"manifest_version\": 3,",
+      "\"name\": \"Vault UI Search\",",
+      "\"version\": \"1.3.0\",",
+      "\"description\": \"Blazing fast path-first search for Vault KV + optional deep value scan.\",",
+      "\"icons\": {",
+      "\"16\": \"icon16.png\",",
+      "\"48\": \"icon48.png\",",
+      "\"128\": \"icon128.png\"",
+      "},"
+    ],
+    "ui.css": [
+      "",
+      "#vault-search-fab {",
+      "position: fixed; top: 20px; right: 20px; z-index: 2147483647;",
+      "padding: 10px 14px; border-radius: 999px; box-shadow: 0 6px 24px rgba(0,0,0,.2);",
+      "background: #111827; color: white; font-weight: 600; cursor: pointer; border: none;",
+      "}",
+      "#vault-search-modal { position: fixed; inset: 0; background: rgba(0,0,0,.35); z-index: 2147483646; display: none; }",
+      "#vault-search-panel {",
+      "position: absolute; top: 10%; left: 50%; transform: translateX(-50%);",
+      "width: min(980px, 95vw); max-height: 80vh; overflow: auto;"
+    ]
+  },
+  "importantFolders": [],
+  "readmeParagraphs": {
+    "root": "# Vault UI Search (MV3) — v1.3.0"
+  },
+  "totals": {
+    "numFiles": 7,
+    "numDirs": 0,
+    "totalSizeBytes": 21836,
+    "totalLinesOfCode": 409
+  },
+  "fileCategories": {
+    "documentation": 1,
+    "source": 1,
+    "other": 4,
+    "config": 1
+  },
+  "linesOfCodePerLanguage": {
+    "JavaScript": 409
+  },
+  "filesPerLanguage": {
+    "JavaScript": 1
+  },
+  "projectTypes": [],
+  "frameworks": [],
+  "entryPoints": [],
+  "ciCdTools": [],
+  "packageManagers": [],
+  "topLevelDirectories": [],
+  "detailedDirectories": [],
+  "architecturalInsights": {
+    "coreApplications": [],
+    "entryPointDetails": [],
+    "serviceArchitecture": {
+      "microservices": [],
+      "monoliths": [],
+      "libraries": []
+    },
+    "layeredArchitecture": {
+      "presentation": [],
+      "business": [],
+      "data": [],
+      "infrastructure": []
+    }
+  },
+  "largeFiles": [],
+  "dependencies": {
+    "production": [],
+    "development": [],
+    "total": 0
+  },
+  "complexity": {
+    "averageFileSize": 58.42857142857143,
+    "maxFileSize": 0,
+    "nestedDepth": 0,
+    "estimatedComplexity": "low"
+  }
+}

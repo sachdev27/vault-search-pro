@@ -1,0 +1,54 @@
+{
+  "manifest_version": 3,
+  "name": "Vault Search Pro",
+  "version": "2.0.0",
+  "description": "Production-grade HashiCorp Vault search with multi-auth support, path-first scanning, and deep value search capabilities.",
+  "author": "Sandesh Sachdev",
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "permissions": [
+    "storage",
+    "clipboardRead",
+    "clipboardWrite",
+    "notifications",
+    "contextMenus"
+  ],
+  "host_permissions": [
+    "https://*/",
+    "http://localhost/*",
+    "http://127.0.0.1/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon16.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    },
+    "default_title": "Vault Search - Configure Connection"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*/ui/*",
+        "http://*/ui/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "ui.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  }
+}
