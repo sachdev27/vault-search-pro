@@ -1,165 +1,377 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vault Search Pro</title>
-  <link rel="stylesheet" href="sidepanel.css">
-</head>
-<body>
-  <div class="panel-container">
-    <!-- Header -->
+<!DOCTYPE html><!DOCTYPE html>
+
+<html lang="en"><htm          </svg>
+
+<head>        </button>
+
+  <meta charset="UTF-8">        <button id="close-btn" class="icon-btn" title="Close Panel">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">          <svg width="16" height="16" viewBox="0 0 16 16">
+
+  <title>Vault Search Pro</title>            <line x1="4" y1="4" x2="12" y2="12" stroke="currentColor" stroke-width="2"/>
+
+  <link rel="stylesheet" href="sidepanel.css">            <line x1="12" y1="4" x2="4" y2="12" stroke="currentColor" stroke-width="2"/>
+
+</head>          </svg>
+
+<body>        </button>
+
+  <div class="panel-container" id="panel-container">      </div>
+
+    <!-- Header -->    </div>
+
     <div class="panel-header">
-      <div class="header-title">
-        <h1>🔐 Vault Search</h1>
-        <span class="version">v2.3.0</span>
-      </div>
-      <div class="header-actions">
-        <button id="minimizeBtn" class="icon-btn" title="Minimize">
+
+      <div class="header-title">    <!-- Tab Navigation -->
+
+        <h1>🔐 Vault Search</h1>    <div class="tab-nav">
+
+        <span class="version">v2.3.0</span>      <button class="tab-btn active" data-tab="search-tab">Search</button>head>
+
+      </div>  <meta charset="UTF-8">
+
+      <div class="header-actions">  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <button id="minimize-btn" class="icon-btn" title="Minimize">  <title>Vault Search Pro</title>
+
+          <svg width="16" height="16" viewBox="0 0 16 16">  <link rel="stylesheet" href="sidepanel.css">
+
+            <line x1="2" y1="8" x2="14" y2="8" stroke="currentColor" stroke-width="2"/></head>
+
+          </svg><body>
+
+        </button>  <div class="panel-container" id="panel-container">
+
+        <button id="close-btn" class="icon-btn" title="Close Panel">    <!-- Header -->
+
+          <svg width="16" height="16" viewBox="0 0 16 16">    <div class="panel-header">
+
+            <line x1="4" y1="4" x2="12" y2="12" stroke="currentColor" stroke-width="2"/>      <div class="header-title">
+
+            <line x1="12" y1="4" x2="4" y2="12" stroke="currentColor" stroke-width="2"/>        <h1>🔐 Vault Search</h1>
+
+          </svg>        <span class="version">v2.3.0</span>
+
+        </button>      </div>
+
+      </div>      <div class="header-actions">
+
+    </div>        <button id="minimize-btn" class="icon-btn" title="Minimize">
+
           <svg width="16" height="16" viewBox="0 0 16 16">
-            <line x1="2" y1="8" x2="14" y2="8" stroke="currentColor" stroke-width="2"/>
-          </svg>
-        </button>
-        <button id="closeBtn" class="icon-btn" title="Close Panel">
-          <svg width="16" height="16" viewBox="0 0 16 16">
-            <line x1="3" y1="3" x2="13" y2="13" stroke="currentColor" stroke-width="2"/>
+
+    <!-- Tab Navigation -->            <line x1="2" y1="8" x2="14" y2="8" stroke="currentColor" stroke-width="2"/>
+
+    <div class="tab-nav">          </svg>
+
+      <button class="tab-btn active" data-tab="search-tab">Search</button>        </button>
+
+      <button class="tab-btn" data-tab="settings-tab">Settings</button>        <button id="closeBtn" class="icon-btn" title="Close Panel">
+
+      <button class="tab-btn" data-tab="sessions-tab">Sessions</button>          <svg width="16" height="16" viewBox="0 0 16 16">
+
+    </div>            <line x1="3" y1="3" x2="13" y2="13" stroke="currentColor" stroke-width="2"/>
+
             <line x1="13" y1="3" x2="3" y2="13" stroke="currentColor" stroke-width="2"/>
-          </svg>
-        </button>
-      </div>
-    </div>
 
-    <!-- Tab Navigation -->
+    <!-- Search Tab -->          </svg>
+
+    <div class="tab-content active" id="search-tab">        </button>
+
+      <div class="connection-badge" id="connection-badge">      </div>
+
+        <span class="status-dot"></span>    </div>
+
+        <span id="connection-text">Not Connected</span>
+
+      </div>    <!-- Tab Navigation -->
+
     <div class="tab-nav">
-      <button class="tab-btn active" data-tab="search">🔍 Search</button>
-      <button class="tab-btn" data-tab="settings">⚙️ Settings</button>
-      <button class="tab-btn" data-tab="sessions">📊 Sessions</button>
-    </div>
 
-    <!-- Search Tab -->
-    <div class="tab-content active" id="search-tab">
-      <div class="connection-badge" id="connectionBadge">
-        <span class="status-dot"></span>
-        <span id="connectionStatus">Not Connected</span>
-      </div>
+      <!-- Search Section -->      <button class="tab-btn active" data-tab="search">🔍 Search</button>
 
-      <div class="search-section">
-        <div class="search-input-group">
-          <input
+      <div class="search-section">      <button class="tab-btn" data-tab="settings">⚙️ Settings</button>
+
+        <div class="search-input-group">      <button class="tab-btn" data-tab="sessions">📊 Sessions</button>
+
+          <input    </div>
+
             type="text"
-            id="searchInput"
-            placeholder="Search Vault secrets..."
-            autofocus
-          />
-          <button id="searchBtn" class="btn-primary">Search</button>
+
+            id="search-input"        <!-- Search Tab -->
+
+            class="search-input"    <div class="tab-content active" id="search-tab">
+
+            placeholder="Search secrets and paths..."      <div class="connection-badge" id="connection-badge">
+
+          />        <span class="status-dot"></span>
+
+          <button id="search-btn" class="btn-primary">Search</button>        <span id="connection-text">Not Connected</span>
+
+        </div>      </div>
+
+
+
+        <div class="search-options">      <!-- Search Section -->
+
+          <label class="checkbox-label">      <div class="search-section">
+
+            <input type="checkbox" id="case-sensitive">        <div class="search-input-group">
+
+            <span>Case sensitive</span>          <input
+
+          </label>            type="text"
+
+          <label class="checkbox-label">            id="search-input"
+
+            <input type="checkbox" id="include-directories" checked>            class="search-input"
+
+            <span>Include directories</span>            placeholder="Search secrets and paths..."
+
+          </label>          />
+
+        </div>          <button id="search-btn" class="btn-primary">Search</button>
+
         </div>
 
-        <div class="search-options">
+        <div id="status-bar" class="status-bar"></div>
+
+      </div>        <div class="search-options">
+
           <label class="checkbox-label">
-            <input type="checkbox" id="caseInsensitive" checked>
-            <span>Case insensitive</span>
-          </label>
-          <label class="checkbox-label">
-            <input type="checkbox" id="includeDirectories" checked>
-            <span>Include directories</span>
-          </label>
-        </div>
 
-        <div id="searchStatusBar" class="status-bar"></div>
-      </div>
+      <!-- Results Section -->            <input type="checkbox" id="case-sensitive">
 
-      <div class="results-section" id="resultsSection">
-        <div class="results-header">
-          <h3>Results</h3>
-          <span id="resultsCount" class="results-count">0</span>
-        </div>
-        <div id="results" class="results-container">
-          <div class="empty-state">
-            <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
-              <circle cx="32" cy="32" r="30" stroke="currentColor" stroke-width="2"/>
-              <path d="M32 20 L32 36 M32 44 L32 44" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+      <div class="results-section">            <span>Case sensitive</span>
+
+        <div class="results-header">          </label>
+
+          <h3>Results</h3>          <label class="checkbox-label">
+
+          <span id="results-count" class="results-count">0</span>            <input type="checkbox" id="include-directories" checked>
+
+        </div>            <span>Include directories</span>
+
+        <div id="results-container" class="results-container">          </label>
+
+          <div class="empty-state">        </div>
+
+            <svg width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 64 64">
+
+              <circle cx="32" cy="32" r="28" stroke="currentColor" stroke-width="3"/>        <div id="status-bar" class="status-bar"></div>
+
+              <path d="M32 20 L32 36 M32 44 L32 44" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>      </div>
+
             </svg>
-            <p>Enter a search term to find secrets</p>
-          </div>
+
+            <p>Enter a search term to find secrets</p>      <!-- Results Section -->
+
+          </div>      <div class="results-section" id="results-section">
+
+        </div>        <div class="results-header">
+
+      </div>          <h3>Results</h3>
+
+    </div>          <span id="results-count" class="results-count">0</span>
+
         </div>
-      </div>
+
+    <!-- Settings Tab -->        <div id="results-container" class="results-container">
+
+    <div class="tab-content" id="settings-tab">          <div class="empty-state">
+
+      <div class="settings-section">            <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+
+        <h3>Vault Connection</h3>              <circle cx="32" cy="32" r="30" stroke="currentColor" stroke-width="2"/>
+
+              <path d="M32 20 L32 36 M32 44 L32 44" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+
+        <div class="auth-tabs">            </svg>
+
+          <button class="auth-tab active" data-auth="token">Token</button>            <p>Enter a search term to find secrets</p>
+
+          <button class="auth-tab" data-auth="userpass">UserPass</button>          </div>
+
+          <button class="auth-tab" data-auth="ldap">LDAP</button>        </div>
+
+        </div>      </div>
+
     </div>
 
-    <!-- Settings Tab -->
-    <div class="tab-content" id="settings-tab">
-      <div class="settings-section">
-        <h3>Vault Connection</h3>
+        <!-- Token Auth Panel -->
 
-        <div class="form-group">
-          <label for="vaultUrl">Vault URL</label>
-          <input type="url" id="vaultUrl" placeholder="https://vault.example.com">
-        </div>
+        <div class="auth-panel active" id="token-panel">    <!-- Settings Tab -->
 
-        <div class="form-group">
-          <label for="namespace">Namespace (optional)</label>
-          <input type="text" id="namespace" placeholder="admin/team">
-        </div>
+          <div class="form-group">    <div class="tab-content" id="settings-tab">
 
-        <div class="auth-tabs">
-          <button class="auth-tab active" data-auth="token">Token</button>
-          <button class="auth-tab" data-auth="userpass">UserPass</button>
-          <button class="auth-tab" data-auth="ldap">LDAP</button>
-        </div>
+            <label for="token-url">Vault URL</label>      <div class="settings-section">
 
-        <!-- Token Auth -->
-        <div class="auth-panel active" id="token-panel">
-          <div class="form-group">
-            <label for="token">Vault Token</label>
-            <input type="password" id="token" placeholder="hvs.CAESIJ...">
+            <input type="url" id="token-url" placeholder="https://vault.example.com">                <h3>Vault Connection</h3>
+
           </div>
-        </div>
 
-        <!-- UserPass Auth -->
-        <div class="auth-panel" id="userpass-panel">
-          <div class="form-group">
-            <label for="username">Username</label>
-            <input type="text" id="username" placeholder="username">
-          </div>
-          <div class="form-group">
-            <label for="password">Password</label>
+          <div class="form-group">        <div class="form-group">
+
+            <label for="token">Token</label>          <label for="token-url">Vault URL</label>
+
+            <input type="password" id="token" placeholder="hvs.CAESIJ...">          <input type="url" id="token-url" placeholder="https://vault.example.com">
+
+          </div>        </div>
+
+          <div class="form-actions">
+
+            <button id="token-disconnect" class="btn-secondary" style="display: none;">Disconnect</button>        <div class="auth-tabs">
+
+            <button id="token-connect" class="btn-primary">Connect</button>          <button class="auth-tab active" data-auth="token">Token</button>
+
+          </div>          <button class="auth-tab" data-auth="userpass">UserPass</button>
+
+          <div id="token-status-message" class="status-message"></div>          <button class="auth-tab" data-auth="ldap">LDAP</button>
+
+        </div>        </div>
+
+
+
+        <!-- UserPass Auth Panel -->        <!-- Token Auth Panel -->
+
+        <div class="auth-panel" id="userpass-panel">        <div class="auth-panel active" id="token-panel">
+
+          <div class="form-group">          <div class="form-group">
+
+            <label for="userpass-url">Vault URL</label>            <label for="token">Token</label>
+
+            <input type="url" id="userpass-url" placeholder="https://vault.example.com">            <input type="password" id="token" placeholder="hvs.CAESIJ...">
+
+          </div>          </div>
+
+          <div class="form-group">          <div class="form-actions">
+
+            <label for="username">Username</label>            <button id="token-disconnect" class="btn-secondary" style="display: none;">Disconnect</button>
+
+            <input type="text" id="username" placeholder="username">            <button id="token-connect" class="btn-primary">Connect</button>
+
+          </div>          </div>
+
+          <div class="form-group">          <div id="token-status-message" class="status-message"></div>
+
+            <label for="password">Password</label>        </div>
+
             <input type="password" id="password" placeholder="••••••••">
-          </div>
-          <div class="form-group">
-            <label for="userpassMount">Mount Path</label>
-            <input type="text" id="userpassMount" value="userpass">
-          </div>
-        </div>
 
-        <!-- LDAP Auth -->
-        <div class="auth-panel" id="ldap-panel">
-          <div class="form-group">
-            <label for="ldapUsername">LDAP Username</label>
-            <input type="text" id="ldapUsername" placeholder="username">
-          </div>
-          <div class="form-group">
-            <label for="ldapPassword">LDAP Password</label>
-            <input type="password" id="ldapPassword" placeholder="••••••••">
-          </div>
-          <div class="form-group">
-            <label for="ldapMount">LDAP Mount Path</label>
-            <input type="text" id="ldapMount" value="ldap">
-          </div>
-        </div>
+          </div>        <!-- UserPass Auth Panel -->
 
-        <div class="form-actions">
-          <button id="clearBtn" class="btn-secondary">Clear</button>
-          <button id="saveBtn" class="btn-primary">Save & Connect</button>
-        </div>
+          <div class="form-actions">        <div class="auth-panel" id="userpass-panel">
 
-        <div id="settingsStatus" class="status-message"></div>
-      </div>
-    </div>
+            <button id="userpass-disconnect" class="btn-secondary" style="display: none;">Disconnect</button>          <div class="form-group">
 
-    <!-- Sessions Tab -->
+            <button id="userpass-connect" class="btn-primary">Connect</button>            <label for="userpass-url">Vault URL</label>
+
+          </div>            <input type="url" id="userpass-url" placeholder="https://vault.example.com">
+
+          <div id="userpass-status-message" class="status-message"></div>          </div>
+
+        </div>          <div class="form-group">
+
+            <label for="username">Username</label>
+
+        <!-- LDAP Auth Panel -->            <input type="text" id="username" placeholder="username">
+
+        <div class="auth-panel" id="ldap-panel">          </div>
+
+          <div class="form-group">          <div class="form-group">
+
+            <label for="ldap-url">Vault URL</label>            <label for="password">Password</label>
+
+            <input type="url" id="ldap-url" placeholder="https://vault.example.com">            <input type="password" id="password" placeholder="••••••••">
+
+          </div>          </div>
+
+          <div class="form-group">          <div class="form-actions">
+
+            <label for="ldap-username">Username</label>            <button id="userpass-disconnect" class="btn-secondary" style="display: none;">Disconnect</button>
+
+            <input type="text" id="ldap-username" placeholder="username">            <button id="userpass-connect" class="btn-primary">Connect</button>
+
+          </div>          </div>
+
+          <div class="form-group">          <div id="userpass-status-message" class="status-message"></div>
+
+            <label for="ldap-password">Password</label>        </div>
+
+            <input type="password" id="ldap-password" placeholder="••••••••">
+
+          </div>        <!-- LDAP Auth Panel -->
+
+          <div class="form-actions">        <div class="auth-panel" id="ldap-panel">
+
+            <button id="ldap-disconnect" class="btn-secondary" style="display: none;">Disconnect</button>          <div class="form-group">
+
+            <button id="ldap-connect" class="btn-primary">Connect</button>            <label for="ldap-url">Vault URL</label>
+
+          </div>            <input type="url" id="ldap-url" placeholder="https://vault.example.com">
+
+          <div id="ldap-status-message" class="status-message"></div>          </div>
+
+        </div>          <div class="form-group">
+
+      </div>            <label for="ldap-username">Username</label>
+
+    </div>            <input type="text" id="ldap-username" placeholder="username">
+
+          </div>
+
+    <!-- Sessions Tab -->          <div class="form-group">
+
+    <div class="tab-content" id="sessions-tab">            <label for="ldap-password">Password</label>
+
+      <div class="sessions-section">            <input type="password" id="ldap-password" placeholder="••••••••">
+
+        <h3>Active Searches</h3>          </div>
+
+        <div id="sessions-list" class="sessions-list">          <div class="form-actions">
+
+          <div class="empty-state">            <button id="ldap-disconnect" class="btn-secondary" style="display: none;">Disconnect</button>
+
+            <p>No active searches</p>            <button id="ldap-connect" class="btn-primary">Connect</button>
+
+          </div>          </div>
+
+        </div>          <div id="ldap-status-message" class="status-message"></div>
+
+      </div>        </div>
+
+    </div>      </div>
+
+  </div>    </div>
+
+
+
+  <!-- Minimized Panel -->    <!-- Sessions Tab -->
+
+  <div class="panel-minimized" id="panel-minimized" style="display: none;">    <div class="tab-content" id="sessions-tab">
+
+    <button id="expand-btn" class="expand-btn" title="Expand Panel">      <div class="sessions-section">
+
+      <svg width="24" height="24" viewBox="0 0 24 24">        <h3>Active Searches</h3>
+
+        <path d="M6 5 L14 10 L6 15 Z" fill="currentColor"/>        <div id="sessions-list" class="sessions-list">
+
+      </svg>      </div>
+
+    </button>    </div>
+
+    <span class="minimized-badge" id="minimized-badge">0</span>
+
+  </div>    <!-- Sessions Tab -->
+
     <div class="tab-content" id="sessions-tab">
-      <div class="sessions-section">
-        <h3>Active Searches</h3>
-        <div id="activeSessions" class="sessions-list">
+
+  <script src="sidepanel.js"></script>      <div class="sessions-section">
+
+</body>        <h3>Active Searches</h3>
+
+</html>        <div id="activeSessions" class="sessions-list">
+
           <div class="empty-state">
             <p>No active searches</p>
           </div>

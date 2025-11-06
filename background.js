@@ -749,11 +749,6 @@ function startActivityMonitoring() {
   }, ACTIVITY_CHECK_INTERVAL);
 }
 
-// Handle extension icon click - Open side panel
-chrome.action.onClicked.addListener((tab) => {
-  chrome.sidePanel.open({ windowId: tab.windowId });
-});
-
 // Context menu for quick access
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({

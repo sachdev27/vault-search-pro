@@ -24,7 +24,9 @@ const connectionText = document.getElementById('connectionText');
 // Search elements
 const searchTermInput = document.getElementById('searchTerm');
 const caseInsensitiveCheckbox = document.getElementById('caseInsensitive');
+const exactMatchCheckbox = document.getElementById('exactMatch');
 const searchBtn = document.getElementById('searchBtn');
+const cancelBtn = document.getElementById('cancelBtn');
 const searchStatus = document.getElementById('searchStatus');
 const searchResults = document.getElementById('searchResults');
 const searchConnectionDot = document.getElementById('searchConnectionDot');
@@ -72,6 +74,9 @@ function setupEventListeners() {
 
   // Search button
   searchBtn.addEventListener('click', handleSearch);
+
+  // Cancel button
+  cancelBtn.addEventListener('click', handleCancelSearch);
 
   // Enter key to save/search
   document.querySelectorAll('input').forEach(input => {
@@ -594,8 +599,12 @@ async function handleSearch() {
     currentSearchId = null;
   }
 
+  // Lock UI during search
+  lockUI(true);
+
   searchBtn.disabled = true;
   searchBtn.innerHTML = '🔄 Starting search...';
+  cancelBtn.style.display = 'block';
   searchResults.innerHTML = '';
   showSearchStatus('<span class="spinner-inline"></span> Starting background search...', 'info');
 
@@ -605,17 +614,25 @@ async function handleSearch() {
 
     if (!authResponse || !authResponse.authenticated) {
       showSearchStatus('Not authenticated. Please configure in Settings tab.', 'error');
+      lockUI(false);
       searchBtn.disabled = false;
       searchBtn.innerHTML = '🔍 Search Vault';
+      cancelBtn.style.display = 'none';
       return;
     }
 
     const { vaultUrl, token, namespace } = authResponse;
 
+    // Get search options
+    const options = {
+      exactMatch: exactMatchCheckbox.checked,
+      caseInsensitive: caseInsensitiveCheckbox.checked
+    };
+
     // Start search in background
     const searchResponse = await chrome.runtime.sendMessage({
       type: 'START_SEARCH',
-      data: { term, vaultUrl, token, namespace }
+      data: { term, vaultUrl, token, namespace, options }
     });
 
     if (searchResponse.success) {
@@ -642,10 +659,77 @@ async function handleSearch() {
   } catch (error) {
     console.error('Search error:', error);
     showSearchStatus(`Error: ${error.message}`, 'error');
+    lockUI(false);
     searchBtn.disabled = false;
     searchBtn.innerHTML = '🔍 Search Vault';
+    cancelBtn.style.display = 'none';
   }
-}// Poll for search results from background
+}
+
+// Handle cancel search
+function handleCancelSearch() {
+  // Stop polling
+  if (searchPollingInterval) {
+    clearInterval(searchPollingInterval);
+    searchPollingInterval = null;
+  }
+
+  // Clear search state
+  if (currentSearchId) {
+    sessionStorage.removeItem('activeSearchId');
+    sessionStorage.removeItem('activeSearchTerm');
+    currentSearchId = null;
+  }
+
+  // Unlock UI
+  lockUI(false);
+
+  // Reset buttons
+  searchBtn.disabled = false;
+  searchBtn.innerHTML = '🔍 Search Vault';
+  cancelBtn.style.display = 'none';
+
+  // Show cancelled message
+  showSearchStatus('Search cancelled', 'info');
+}
+
+// Lock/unlock UI during search
+function lockUI(lock) {
+  const elementsToLock = [
+    searchTermInput,
+    caseInsensitiveCheckbox,
+    exactMatchCheckbox,
+    ...document.querySelectorAll('.main-tab'),
+    ...document.querySelectorAll('.auth-tab'),
+    vaultUrlInput,
+    namespaceInput,
+    tokenInput,
+    usernameInput,
+    passwordInput,
+    userpassMountInput,
+    ldapUsernameInput,
+    ldapPasswordInput,
+    ldapMountInput,
+    saveBtn,
+    clearBtn
+  ];
+
+  elementsToLock.forEach(el => {
+    if (el) {
+      if (lock) {
+        el.disabled = true;
+        el.style.opacity = '0.5';
+        el.style.pointerEvents = 'none';
+      } else {
+        el.disabled = false;
+        el.style.opacity = '1';
+        el.style.pointerEvents = 'auto';
+      }
+    }
+  });
+}
+
+// Poll for search results from background
 async function pollSearchResults() {
   if (!currentSearchId) return;
 
@@ -684,6 +768,8 @@ async function pollSearchResults() {
       showSearchStatus(`✅ Search complete! Found ${response.results.length} result(s)`, 'success');
       searchBtn.disabled = false;
       searchBtn.innerHTML = '🔍 Search Vault';
+      cancelBtn.style.display = 'none';
+      lockUI(false); // Unlock UI
     } else if (response.status === 'error') {
       // Search error
       if (searchPollingInterval) {
@@ -695,6 +781,8 @@ async function pollSearchResults() {
       showSearchStatus(`Error: ${response.error}`, 'error');
       searchBtn.disabled = false;
       searchBtn.innerHTML = '🔍 Search Vault';
+      cancelBtn.style.display = 'none';
+      lockUI(false); // Unlock UI
     } else {
       // Still running - update status
       const term = sessionStorage.getItem('activeSearchTerm') || 'search';

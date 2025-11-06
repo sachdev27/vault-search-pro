@@ -358,9 +358,19 @@
         <label for="caseInsensitive">Case insensitive</label>
       </div>
 
-      <button class="btn-primary" id="searchBtn" style="width: 100%; margin-top: 12px;">
-        🔍 Search Vault
-      </button>
+      <div class="checkbox-group">
+        <input type="checkbox" id="exactMatch">
+        <label for="exactMatch">Exact match</label>
+      </div>
+
+      <div class="button-group" style="margin-top: 12px;">
+        <button class="btn-primary" id="searchBtn" style="flex: 2;">
+          🔍 Search Vault
+        </button>
+        <button class="btn-secondary" id="cancelBtn" style="flex: 1; display: none;">
+          Cancel
+        </button>
+      </div>
 
       <div class="search-status" id="searchStatus"></div>
 
