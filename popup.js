@@ -45,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
   restoreFormState(); // Restore any unsaved form data
   setupEventListeners();
   checkConnectionStatus();
+  checkForActiveSearch(); // Check if there's an ongoing search
 });
 
 // Setup event listeners
@@ -505,6 +506,72 @@ function restoreFormState() {
   }
 }
 
+// Check for active search when popup opens
+async function checkForActiveSearch() {
+  try {
+    const activeSearchId = sessionStorage.getItem('activeSearchId');
+    const activeSearchTerm = sessionStorage.getItem('activeSearchTerm');
+
+    if (activeSearchId) {
+      console.log('[Popup] Resuming active search:', activeSearchId);
+
+      // Check if search still exists
+      const response = await chrome.runtime.sendMessage({
+        type: 'GET_SEARCH_RESULTS',
+        searchId: activeSearchId
+      });
+
+      if (response && response.status !== 'not_found') {
+        // Resume this search
+        currentSearchId = activeSearchId;
+
+        // Update UI
+        if (activeSearchTerm) {
+          searchTermInput.value = activeSearchTerm;
+        }
+
+        if (response.status === 'running') {
+          searchBtn.disabled = true;
+          searchBtn.innerHTML = '⏸️ Searching...';
+          showSearchStatus(
+            `<span class="spinner-inline"></span> Resuming search for "${activeSearchTerm}"...`,
+            'info'
+          );
+
+          // Display current results
+          displaySearchResults(response.results || []);
+
+          // Start polling
+          searchPollingInterval = setInterval(async () => {
+            await pollSearchResults();
+          }, 1000);
+
+          // Immediate poll
+          await pollSearchResults();
+        } else if (response.status === 'completed') {
+          // Show completed results
+          displaySearchResults(response.results || []);
+          showSearchStatus(`✅ Search complete! Found ${response.results.length} result(s)`, 'success');
+          sessionStorage.removeItem('activeSearchId');
+          sessionStorage.removeItem('activeSearchTerm');
+        } else if (response.status === 'error') {
+          showSearchStatus(`Previous search failed: ${response.error}`, 'error');
+          sessionStorage.removeItem('activeSearchId');
+          sessionStorage.removeItem('activeSearchTerm');
+        }
+      } else {
+        // Search expired
+        sessionStorage.removeItem('activeSearchId');
+        sessionStorage.removeItem('activeSearchTerm');
+      }
+    }
+  } catch (error) {
+    console.error('Error checking for active search:', error);
+    sessionStorage.removeItem('activeSearchId');
+    sessionStorage.removeItem('activeSearchTerm');
+  }
+}
+
 // Handle search button click
 async function handleSearch() {
   const term = searchTermInput.value.trim();
@@ -514,9 +581,17 @@ async function handleSearch() {
     return;
   }
 
-  // Clear previous search polling
+  // Clear previous search polling and state
   if (searchPollingInterval) {
     clearInterval(searchPollingInterval);
+    searchPollingInterval = null;
+  }
+
+  // Clear old search ID
+  if (currentSearchId) {
+    sessionStorage.removeItem('activeSearchId');
+    sessionStorage.removeItem('activeSearchTerm');
+    currentSearchId = null;
   }
 
   searchBtn.disabled = true;
@@ -546,6 +621,10 @@ async function handleSearch() {
     if (searchResponse.success) {
       currentSearchId = searchResponse.searchId;
 
+      // Save search state to sessionStorage so we can resume if popup reopens
+      sessionStorage.setItem('activeSearchId', currentSearchId);
+      sessionStorage.setItem('activeSearchTerm', term);
+
       showSearchStatus('<span class="spinner-inline"></span> Search running in background... (you can close this popup)', 'info');
       searchBtn.innerHTML = '⏸️ Searching...';
 
@@ -566,9 +645,7 @@ async function handleSearch() {
     searchBtn.disabled = false;
     searchBtn.innerHTML = '🔍 Search Vault';
   }
-}
-
-// Poll for search results from background
+}// Poll for search results from background
 async function pollSearchResults() {
   if (!currentSearchId) return;
 
@@ -582,7 +659,11 @@ async function pollSearchResults() {
       // Search expired or doesn't exist
       if (searchPollingInterval) {
         clearInterval(searchPollingInterval);
+        searchPollingInterval = null;
       }
+      sessionStorage.removeItem('activeSearchId');
+      sessionStorage.removeItem('activeSearchTerm');
+      currentSearchId = null;
       showSearchStatus('Search expired. Please try again.', 'error');
       searchBtn.disabled = false;
       searchBtn.innerHTML = '🔍 Search Vault';
@@ -596,7 +677,10 @@ async function pollSearchResults() {
       // Search complete
       if (searchPollingInterval) {
         clearInterval(searchPollingInterval);
+        searchPollingInterval = null;
       }
+      sessionStorage.removeItem('activeSearchId');
+      sessionStorage.removeItem('activeSearchTerm');
       showSearchStatus(`✅ Search complete! Found ${response.results.length} result(s)`, 'success');
       searchBtn.disabled = false;
       searchBtn.innerHTML = '🔍 Search Vault';
@@ -604,14 +688,18 @@ async function pollSearchResults() {
       // Search error
       if (searchPollingInterval) {
         clearInterval(searchPollingInterval);
+        searchPollingInterval = null;
       }
+      sessionStorage.removeItem('activeSearchId');
+      sessionStorage.removeItem('activeSearchTerm');
       showSearchStatus(`Error: ${response.error}`, 'error');
       searchBtn.disabled = false;
       searchBtn.innerHTML = '🔍 Search Vault';
     } else {
       // Still running - update status
+      const term = sessionStorage.getItem('activeSearchTerm') || 'search';
       showSearchStatus(
-        `<span class="spinner-inline"></span> Found ${response.results.length} result(s) so far... (search continues in background)`,
+        `<span class="spinner-inline"></span> Found ${response.results.length} result(s) for "${term}"... (continues in background)`,
         'info'
       );
     }
