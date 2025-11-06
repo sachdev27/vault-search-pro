@@ -58,8 +58,8 @@ Unsure where to begin? Look for issues labeled:
 
 1. **Clone your fork**:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/vault-search-extension.git
-   cd vault-search-extension
+   git clone https://github.com/YOUR_USERNAME/vault-search-pro.git
+   cd vault-search-pro
    ```
 
 2. **Load the extension in Chrome**:

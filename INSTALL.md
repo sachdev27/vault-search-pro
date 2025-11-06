@@ -28,12 +28,12 @@
 
 **Option A: Clone from GitHub**
 ```bash
-git clone https://github.com/sandeshsachdev/vault-search-extension.git
-cd vault-search-extension
+git clone https://github.com/sandeshsachdev/vault-search-pro.git
+cd vault-search-pro
 ```
 
 **Option B: Download ZIP**
-1. Go to https://github.com/sandeshsachdev/vault-search-extension
+1. Go to https://github.com/sandeshsachdev/vault-search-pro
 2. Click "Code" → "Download ZIP"
 3. Extract the ZIP file
 
@@ -280,8 +280,8 @@ All stored settings and credentials will be deleted.
 ## Getting Help
 
 - **Documentation**: See main [README.md](README.md)
-- **Issues**: [GitHub Issues](https://github.com/sandeshsachdev/vault-search-extension/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/sandeshsachdev/vault-search-extension/discussions)
+- **Issues**: [GitHub Issues](https://github.com/sandeshsachdev/vault-search-pro/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/sandeshsachdev/vault-search-pro/discussions)
 
 ---
 

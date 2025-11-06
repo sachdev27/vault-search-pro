@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Vault Search Pro &mdash; Chrome Extension for HashiCorp Vault</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="hero" id="top">
+      <nav class="top-nav">
+        <div class="brand">Vault Search Pro</div>
+        <div class="nav-links">
+          <a href="#features">Features</a>
+          <a href="#preview">Preview</a>
+          <a href="#install">Install</a>
+          <a href="https://buymeacoffee.com/sachdevst" target="_blank" rel="noreferrer">☕ Support</a>
+        </div>
+      </nav>
+
+      <div class="hero-content">
+        <div class="hero-copy">
+          <span class="pill">Chrome Extension</span>
+          <h1>Lightning-fast search across every Vault namespace.</h1>
+          <p>
+            Vault Search Pro brings instant, parallel, and typo-proof discovery of secrets straight into your browser.
+            Close the popup? No problem&mdash;your search resumes exactly where you left off.
+          </p>
+          <div class="hero-cta">
+            <a class="primary" href="https://chromewebstore.google.com/detail">Install from Chrome Web Store</a>
+            <a class="secondary" href="https://github.com/sandeshsachdev/vault-search-pro" target="_blank" rel="noreferrer">View on GitHub</a>
+          </div>
+          <div class="hero-stats">
+            <div>
+              <strong>10x</strong>
+              <span>Faster than manual lookups</span>
+            </div>
+            <div>
+              <strong>0</strong>
+              <span>Secrets left behind</span>
+            </div>
+            <div>
+              <strong>2.3.0</strong>
+              <span>Latest release</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <div class="floating-card">
+            <div class="floating-card__header">
+              <span class="status-dot"></span>
+              Vault Search Pro
+            </div>
+            <div class="floating-card__body">
+              <div class="floating-card__line floating-card__line--wide"></div>
+              <div class="floating-card__line"></div>
+              <div class="floating-card__line"></div>
+              <div class="holo-glow"></div>
+            </div>
+          </div>
+          <div class="hero-glow"></div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="features" id="features">
+        <h2>Why engineers rely on Vault Search Pro</h2>
+        <p class="section-tagline">Purpose-built for platform teams, SREs, and security-minded developers.</p>
+        <div class="feature-grid">
+          <article class="feature-card">
+            <h3>Parallel discovery engine</h3>
+            <p>Scans mounts simultaneously, streams results instantly, and adapts when Vault throttles.</p>
+          </article>
+          <article class="feature-card">
+            <h3>Smart resumable sessions</h3>
+            <p>Every active search is stateful. Close the popup, step away, and pick up right where you left off.</p>
+          </article>
+          <article class="feature-card">
+            <h3>Precision filters</h3>
+            <p>Toggle exact matches, case-insensitive mode, and path-first heuristics without touching a CLI.</p>
+          </article>
+          <article class="feature-card">
+            <h3>Namespace aware</h3>
+            <p>Works across namespaces and KV versions. The extension detects mount versions automatically.</p>
+          </article>
+          <article class="feature-card">
+            <h3>Keyboard native</h3>
+            <p>Open the overlay with <code>Ctrl</code>/<code>⌘</code> + <code>Shift</code> + <code>K</code>. Search without leaving your flow.</p>
+          </article>
+          <article class="feature-card">
+            <h3>Privacy-first</h3>
+            <p>Your Vault token never leaves the browser. All requests happen locally via official APIs.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="preview" id="preview">
+        <div class="preview-copy">
+          <span class="pill">Live Preview</span>
+          <h2>Explore the popup before installing.</h2>
+          <p>
+            This interactive demo mirrors the real Vault Search Pro popup. Switch tabs, tweak options, and watch results populate in real time.
+          </p>
+          <ul class="preview-highlights">
+            <li>Persistent search state when you close the popup</li>
+            <li>Adaptive polling with instant result streaming</li>
+            <li>Detailed result cards with copy-ready paths</li>
+          </ul>
+          <div class="preview-actions">
+            <button data-tab="search" class="tab-toggle active">Search view</button>
+            <button data-tab="settings" class="tab-toggle">Settings view</button>
+          </div>
+        </div>
+
+        <div class="preview-panel" role="presentation">
+          <div class="popup-shell">
+            <header class="popup-header">
+              <div class="popup-title">Vault Search Pro</div>
+              <span class="popup-version">v2.3.0</span>
+            </header>
+            <div class="popup-tabs">
+              <button class="popup-tab active" data-tab="search">Search</button>
+              <button class="popup-tab" data-tab="settings">Settings</button>
+            </div>
+
+            <div class="popup-body">
+              <div class="tab-content tab-content--search active" id="tab-search">
+                <label class="field">
+                  <span class="field-label">Search term</span>
+                  <input type="text" value="database-password" readonly />
+                </label>
+                <div class="field field--options">
+                  <label><input type="checkbox" checked disabled /> Case insensitive</label>
+                  <label><input type="checkbox" disabled /> Exact match</label>
+                </div>
+                <button class="cta-button">Searching…</button>
+                <div class="results-counter">12 results · streaming live</div>
+                <ul class="result-list">
+                  <li>
+                    <span class="result-path">kv/team-app/config</span>
+                    <span class="result-meta">Updated 2m ago</span>
+                  </li>
+                  <li>
+                    <span class="result-path">secret/prod/db/root</span>
+                    <span class="result-meta">Updated 6m ago</span>
+                  </li>
+                  <li>
+                    <span class="result-path">kv/data/analytics/warehouse</span>
+                    <span class="result-meta">Updated 12m ago</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div class="tab-content tab-content--settings" id="tab-settings">
+                <label class="field">
+                  <span class="field-label">Vault URL</span>
+                  <input type="text" value="https://vault.example.com" readonly />
+                </label>
+                <label class="field">
+                  <span class="field-label">Namespace</span>
+                  <input type="text" value="admin/" readonly />
+                </label>
+                <label class="field">
+                  <span class="field-label">Token</span>
+                  <input type="password" value="s.••••••••" readonly />
+                </label>
+                <p class="settings-note">
+                  Settings persist in your browser. We never transmit credentials outside your machine.
+                </p>
+                <button class="secondary-cta">Learn how syncing works</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="workflow" id="workflow">
+        <h2>Go from zero to located secrets in 3 steps</h2>
+        <div class="workflow-steps">
+          <div class="step">
+            <span class="step-number">01</span>
+            <h3>Connect</h3>
+            <p>Drop in your Vault URL, token, and optional namespace. Your session stays local and encrypted.</p>
+          </div>
+          <div class="step">
+            <span class="step-number">02</span>
+            <h3>Search</h3>
+            <p>Type any keyword. Vault Search Pro fans out across mounts, batching requests while respecting limits.</p>
+          </div>
+          <div class="step">
+            <span class="step-number">03</span>
+            <h3>Act</h3>
+            <p>Copy results, share permalinks, and open entries in the Vault UI without digging through folders.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="quotes" aria-label="User testimonials">
+        <div class="quote-card">
+          <blockquote>
+            “We trimmed secret hunts from 20 minutes to under 2. Vault Search Pro is now part of our incident playbook.”
+          </blockquote>
+          <cite>Priya Malhotra &mdash; Staff SRE, Zephyr Cloud</cite>
+        </div>
+        <div class="quote-card">
+          <blockquote>
+            “The popup state persistence is the killer feature. I can pivot between dashboards without losing results.”
+          </blockquote>
+          <cite>Leo Armstrong &mdash; Lead Platform Engineer, NovaOps</cite>
+        </div>
+      </section>
+
+      <section class="install" id="install">
+        <div class="install-content">
+          <h2>Install &amp; start searching in under 60 seconds</h2>
+          <ol>
+            <li>Enable <strong>Developer mode</strong> in <code>chrome://extensions</code>.</li>
+            <li>Download the latest release from GitHub or install from the Chrome Web Store.</li>
+            <li>Open the popup, paste your Vault token, and hit <em>Search</em>.</li>
+          </ol>
+          <div class="install-actions">
+            <a class="primary" href="https://github.com/sandeshsachdev/vault-search-pro/releases">Get the latest release</a>
+            <a class="secondary" href="https://github.com/sandeshsachdev/vault-search-pro#-installation">Installation guide</a>
+          </div>
+        </div>
+        <div class="install-visual">
+          <div class="stat-card">
+            <span class="stat-heading">Loved by teams shipping fast</span>
+            <div class="stat-metric">4.9<span>/5</span></div>
+            <p class="stat-caption">Average satisfaction score across internal deployments.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div>
+        <strong>Vault Search Pro</strong> &mdash; crafted by Sandesh Sachdev
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/sandeshsachdev/vault-search-pro">GitHub</a>
+        <a href="https://buymeacoffee.com/sachdevst">Buy me a coffee</a>
+        <a href="#top">Back to top</a>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
