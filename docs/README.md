@@ -1,18 +1,49 @@
-# Vault Search Pro - Marketing Website
+# Vault Search Pro - Marketing Website & Interactive Demo
 
-This folder contains the GitHub Pages marketing site for the Vault Search Pro Chrome extension.
+This folder contains the GitHub Pages marketing site and interactive demo for the Vault Search Pro Chrome extension.
 
 ## 🌐 Live Site
 
-**URL**: https://sachdev27.github.io/vault-advance-search/
+**Main Site**: https://sachdev27.github.io/vault-advance-search/
+**Interactive Demo**: https://sachdev27.github.io/vault-advance-search/demo.html
 
 ## 📁 Files
 
-- `index.html` - Main landing page
-- `styles.css` - Styling and animations
-- `script.js` - Interactive functionality
+### Marketing Site
+- `index.html` - Main landing page with hero, features, and install guide
+- `styles.css` - Marketing site styling and animations (825 lines)
+- `script.js` - Tab switching and interactive elements
+
+### Interactive Demo
+- `demo.html` - **Fully functional replica of the extension popup**
+- `demo.css` - Demo page styling including popup replica (650+ lines)
+- `demo.js` - Complete demo functionality with simulated search (300+ lines)
+
+### Documentation
 - `deploy.sh` - Deployment helper script
 - `DEPLOYMENT.md` - Complete deployment guide
+- `README.md` - This file
+
+## 🎮 Interactive Demo Features
+
+The demo page (`demo.html`) provides a **pixel-perfect, fully interactive** replica of the extension:
+
+### What Works
+- ✅ **Tab Switching** - Toggle between Search and Settings tabs
+- ✅ **Live Search** - Enter terms and watch results stream in real-time
+- ✅ **Search Options** - Case sensitive and exact match toggles
+- ✅ **Cancel Functionality** - Stop searches mid-flight
+- ✅ **Result Display** - 20+ sample Vault paths with metadata
+- ✅ **Settings Panel** - Configure Vault URL, namespace, token
+- ✅ **Connection Testing** - Simulated connection verification
+- ✅ **Status Messages** - Real-time feedback for all actions
+- ✅ **Realistic Timing** - Results appear every 400-1000ms
+
+### Try These Searches
+- `database` - Find database credentials
+- `api-key` - Locate API keys
+- `password` - Search for passwords
+- `secret` - Find secret paths
 
 ## 🚀 Quick Deploy
 

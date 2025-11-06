@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vault Search Pro - Live Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="demo.css">
+</head>
+<body>
+  <nav class="demo-nav">
+    <a href="index.html" class="back-link">← Back to home</a>
+    <div class="demo-title">Live Extension Demo</div>
+  </nav>
+
+  <div class="demo-container">
+    <aside class="demo-sidebar">
+      <h2>Interactive Demo</h2>
+      <p>This is a fully functional replica of the Vault Search Pro extension popup. Try it out!</p>
+
+      <div class="demo-instructions">
+        <h3>Try these features:</h3>
+        <ul>
+          <li>Switch between <strong>Search</strong> and <strong>Settings</strong> tabs</li>
+          <li>Enter a search term and click <strong>Start Search</strong></li>
+          <li>Watch results stream in real-time</li>
+          <li>Click <strong>Cancel</strong> to stop searching</li>
+          <li>Toggle search options (case sensitive, exact match)</li>
+          <li>Configure Vault settings in the Settings tab</li>
+        </ul>
+      </div>
+
+      <div class="demo-note">
+        <strong>Note:</strong> This is a simulated demo. No actual Vault connections are made. Results are randomly generated for demonstration purposes.
+      </div>
+
+      <div class="demo-actions">
+        <a href="https://github.com/sandeshsachdev/vault-search-extension" class="demo-btn demo-btn-primary">
+          Get the Extension
+        </a>
+        <a href="index.html#install" class="demo-btn demo-btn-secondary">
+          Installation Guide
+        </a>
+      </div>
+    </aside>
+
+    <main class="demo-main">
+      <div class="browser-chrome">
+        <div class="browser-bar">
+          <div class="browser-dots">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <div class="browser-title">Vault Search Pro</div>
+        </div>
+
+        <!-- Extension Popup Replica -->
+        <div class="popup-replica">
+          <div class="popup-container">
+            <div class="popup-header">
+              <h1>Vault Search Pro</h1>
+              <span class="popup-version">v2.3.0</span>
+            </div>
+
+            <!-- Main Tabs -->
+            <div class="main-tabs">
+              <button class="main-tab active" data-tab="search">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="m21 21-4.35-4.35"></path>
+                </svg>
+                Search
+              </button>
+              <button class="main-tab" data-tab="settings">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="3"></circle>
+                  <path d="M12 1v6m0 6v6"></path>
+                  <path d="m1 12 6 0m6 0 6 0"></path>
+                </svg>
+                Settings
+              </button>
+            </div>
+
+            <!-- Search Tab Content -->
+            <div class="tab-content active" id="search-tab">
+              <div class="form-group">
+                <label for="search-term">Search term</label>
+                <input
+                  type="text"
+                  id="search-term"
+                  placeholder="e.g., database-password, api-key"
+                  autocomplete="off"
+                >
+              </div>
+
+              <div class="search-options">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="case-sensitive">
+                  <span>Case sensitive</span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="exact-match">
+                  <span>Exact match</span>
+                </label>
+              </div>
+
+              <button class="btn btn-primary" id="search-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="m21 21-4.35-4.35"></path>
+                </svg>
+                Start Search
+              </button>
+
+              <button class="btn btn-secondary hidden" id="cancel-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <path d="m15 9-6 6m0-6 6 6"></path>
+                </svg>
+                Cancel Search
+              </button>
+
+              <div class="status-message" id="status-message"></div>
+
+              <div class="results-section hidden" id="results-section">
+                <div class="results-header">
+                  <h3>Results</h3>
+                  <span class="results-count" id="results-count">0 found</span>
+                </div>
+                <div class="results-list" id="results-list">
+                  <!-- Results will be populated here -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Settings Tab Content -->
+            <div class="tab-content" id="settings-tab">
+              <div class="form-group">
+                <label for="vault-url">Vault URL</label>
+                <input
+                  type="url"
+                  id="vault-url"
+                  placeholder="https://vault.example.com"
+                  value="https://vault.example.com"
+                >
+              </div>
+
+              <div class="form-group">
+                <label for="namespace">Namespace (optional)</label>
+                <input
+                  type="text"
+                  id="namespace"
+                  placeholder="admin/"
+                >
+              </div>
+
+              <div class="form-group">
+                <label for="token">Vault Token</label>
+                <input
+                  type="password"
+                  id="token"
+                  placeholder="s.xxxxxxxxxxxxxx"
+                >
+              </div>
+
+              <button class="btn btn-primary" id="save-settings-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                  <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                  <polyline points="7 3 7 8 15 8"></polyline>
+                </svg>
+                Save Settings
+              </button>
+
+              <button class="btn btn-secondary" id="test-connection-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                </svg>
+                Test Connection
+              </button>
+
+              <div class="settings-note">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="16" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+                <p>Your credentials are stored locally in your browser and never transmitted to external servers.</p>
+              </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="popup-footer">
+              <span class="version">Version 2.3.0</span>
+              <div>Created by <strong>Sandesh Sachdev</strong></div>
+              <div style="margin-top: 8px;">
+                <a href="https://buymeacoffee.com/sachdevst" target="_blank" style="color: #007bff; text-decoration: none; font-size: 12px;">
+                  ☕ Buy me a coffee
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="demo.js"></script>
+</body>
+</html>
