@@ -21,8 +21,8 @@ const requiredFiles = [
   'popup.html',
   'popup.js',
   'ui.css',
-  'icon16.png',
-  'icon48.png',
+  'icon32.png',
+  'icon64.png',
   'icon128.png'
 ];
 
