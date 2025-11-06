@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Vault Search Pro",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "HashiCorp Vault search with persistent auth, background search, and comprehensive results",
   "author": "Sandesh Sachdev",
   "homepage_url": "https://github.com/sachdev27",
@@ -16,7 +16,8 @@
     "clipboardRead",
     "clipboardWrite",
     "notifications",
-    "contextMenus"
+    "contextMenus",
+    "sidePanel"
   ],
   "host_permissions": [
     "https://*/",
@@ -34,6 +35,9 @@
       "128": "icon128.png"
     },
     "default_title": "Vault Search - Configure Connection"
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
   },
   "content_scripts": [
     {

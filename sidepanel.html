@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vault Search Pro</title>
+  <link rel="stylesheet" href="sidepanel.css">
+</head>
+<body>
+  <div class="panel-container">
+    <!-- Header -->
+    <div class="panel-header">
+      <div class="header-title">
+        <h1>🔐 Vault Search</h1>
+        <span class="version">v2.3.0</span>
+      </div>
+      <div class="header-actions">
+        <button id="minimizeBtn" class="icon-btn" title="Minimize">
+          <svg width="16" height="16" viewBox="0 0 16 16">
+            <line x1="2" y1="8" x2="14" y2="8" stroke="currentColor" stroke-width="2"/>
+          </svg>
+        </button>
+        <button id="closeBtn" class="icon-btn" title="Close Panel">
+          <svg width="16" height="16" viewBox="0 0 16 16">
+            <line x1="3" y1="3" x2="13" y2="13" stroke="currentColor" stroke-width="2"/>
+            <line x1="13" y1="3" x2="3" y2="13" stroke="currentColor" stroke-width="2"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Tab Navigation -->
+    <div class="tab-nav">
+      <button class="tab-btn active" data-tab="search">🔍 Search</button>
+      <button class="tab-btn" data-tab="settings">⚙️ Settings</button>
+      <button class="tab-btn" data-tab="sessions">📊 Sessions</button>
+    </div>
+
+    <!-- Search Tab -->
+    <div class="tab-content active" id="search-tab">
+      <div class="connection-badge" id="connectionBadge">
+        <span class="status-dot"></span>
+        <span id="connectionStatus">Not Connected</span>
+      </div>
+
+      <div class="search-section">
+        <div class="search-input-group">
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Search Vault secrets..."
+            autofocus
+          />
+          <button id="searchBtn" class="btn-primary">Search</button>
+        </div>
+
+        <div class="search-options">
+          <label class="checkbox-label">
+            <input type="checkbox" id="caseInsensitive" checked>
+            <span>Case insensitive</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" id="includeDirectories" checked>
+            <span>Include directories</span>
+          </label>
+        </div>
+
+        <div id="searchStatusBar" class="status-bar"></div>
+      </div>
+
+      <div class="results-section" id="resultsSection">
+        <div class="results-header">
+          <h3>Results</h3>
+          <span id="resultsCount" class="results-count">0</span>
+        </div>
+        <div id="results" class="results-container">
+          <div class="empty-state">
+            <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+              <circle cx="32" cy="32" r="30" stroke="currentColor" stroke-width="2"/>
+              <path d="M32 20 L32 36 M32 44 L32 44" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+            <p>Enter a search term to find secrets</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Tab -->
+    <div class="tab-content" id="settings-tab">
+      <div class="settings-section">
+        <h3>Vault Connection</h3>
+
+        <div class="form-group">
+          <label for="vaultUrl">Vault URL</label>
+          <input type="url" id="vaultUrl" placeholder="https://vault.example.com">
+        </div>
+
+        <div class="form-group">
+          <label for="namespace">Namespace (optional)</label>
+          <input type="text" id="namespace" placeholder="admin/team">
+        </div>
+
+        <div class="auth-tabs">
+          <button class="auth-tab active" data-auth="token">Token</button>
+          <button class="auth-tab" data-auth="userpass">UserPass</button>
+          <button class="auth-tab" data-auth="ldap">LDAP</button>
+        </div>
+
+        <!-- Token Auth -->
+        <div class="auth-panel active" id="token-panel">
+          <div class="form-group">
+            <label for="token">Vault Token</label>
+            <input type="password" id="token" placeholder="hvs.CAESIJ...">
+          </div>
+        </div>
+
+        <!-- UserPass Auth -->
+        <div class="auth-panel" id="userpass-panel">
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" placeholder="username">
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="••••••••">
+          </div>
+          <div class="form-group">
+            <label for="userpassMount">Mount Path</label>
+            <input type="text" id="userpassMount" value="userpass">
+          </div>
+        </div>
+
+        <!-- LDAP Auth -->
+        <div class="auth-panel" id="ldap-panel">
+          <div class="form-group">
+            <label for="ldapUsername">LDAP Username</label>
+            <input type="text" id="ldapUsername" placeholder="username">
+          </div>
+          <div class="form-group">
+            <label for="ldapPassword">LDAP Password</label>
+            <input type="password" id="ldapPassword" placeholder="••••••••">
+          </div>
+          <div class="form-group">
+            <label for="ldapMount">LDAP Mount Path</label>
+            <input type="text" id="ldapMount" value="ldap">
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button id="clearBtn" class="btn-secondary">Clear</button>
+          <button id="saveBtn" class="btn-primary">Save & Connect</button>
+        </div>
+
+        <div id="settingsStatus" class="status-message"></div>
+      </div>
+    </div>
+
+    <!-- Sessions Tab -->
+    <div class="tab-content" id="sessions-tab">
+      <div class="sessions-section">
+        <h3>Active Searches</h3>
+        <div id="activeSessions" class="sessions-list">
+          <div class="empty-state">
+            <p>No active searches</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Minimized State -->
+  <div class="panel-minimized" id="panelMinimized" style="display: none;">
+    <button id="expandBtn" class="expand-btn" title="Expand Panel">
+      <svg width="20" height="20" viewBox="0 0 20 20">
+        <path d="M6 5 L14 10 L6 15 Z" fill="currentColor"/>
+      </svg>
+    </button>
+    <span class="minimized-badge" id="minimizedBadge">0</span>
+  </div>
+
+  <script src="sidepanel.js"></script>
+</body>
+</html>

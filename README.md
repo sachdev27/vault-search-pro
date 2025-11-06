@@ -1,12 +1,12 @@
 # 🔐 Vault Search Pro
 
-[![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](https://github.com/sandeshsachdev/vault-search-extension)
+[![Version](https://img.shields.io/badge/version-2.3.0-blue.svg)](https://github.com/sandeshsachdev/vault-search-extension)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Chrome](https://img.shields.io/badge/chrome-extension-orange.svg)](https://chrome.google.com/webstore)
 
-> **Production-grade Chrome extension for blazing-fast HashiCorp Vault secret search**
+> **Production-grade Chrome extension with industry-standard persistent UI for HashiCorp Vault secret search**
 
-A powerful, enterprise-ready Chrome extension that provides lightning-fast search capabilities for HashiCorp Vault with multi-auth support, intelligent path scanning, and deep value search.
+A powerful, enterprise-ready Chrome extension that provides lightning-fast search capabilities for HashiCorp Vault with **persistent Side Panel UI**, multi-auth support, intelligent path scanning, and deep value search.
 
 **Created by [Sandesh Sachdev](https://github.com/sandeshsachdev)**
 
@@ -14,7 +14,16 @@ A powerful, enterprise-ready Chrome extension that provides lightning-fast searc
 
 ## ✨ Features
 
-### 🚀 Core Capabilities
+### 🎯 Side Panel UI (NEW in v2.3.0)
+- **�️ Industry-Grade Persistent Interface**
+  - Never disappears when clicking outside (unlike popups)
+  - Dockable panel that stays visible across tabs
+  - Background search continues even when minimized
+  - Session tracking for multiple searches
+  - Minimize/expand controls for workflow flexibility
+  - Professional developer experience
+
+### �🚀 Core Capabilities
 - **⚡ Two-Phase Search Engine**
   - Phase A: Ultra-fast path-only scanning (instant results)
   - Phase B: Deep value search on candidate paths
@@ -24,18 +33,18 @@ A powerful, enterprise-ready Chrome extension that provides lightning-fast searc
   - **Token-based auth**: Direct Vault token authentication
   - **UserPass (Basic Auth)**: Username/password authentication
   - **LDAP**: Enterprise LDAP integration
-  - Auto-detection from Vault UI when available
+  - Persistent authentication (12-hour session)
 
-- **🎯 Standalone Operation**
-  - Works without visiting Vault UI first
-  - Popup configuration for quick setup
-  - Remember me functionality for credentials
-  - Auto-saves last used Vault URL
+- **🎯 Background Search Engine**
+  - Searches continue in background service worker
+  - Results persist when panel is closed/minimized
+  - Resume active searches on panel reopen
+  - Multiple concurrent search tracking
 
 ### 🛡️ Security & Enterprise Features
-- **Secure Storage**: Session-based token management
+- **Persistent Auth Storage**: chrome.storage.local with 12-hour expiry
 - **Token Refresh**: Automatic token renewal support
-- **Session Expiry**: 12-hour inactivity timeout
+- **Session Management**: Activity-based timeout
 - **Namespace Support**: Full Vault namespace compatibility
 - **CSP Compliant**: Content Security Policy enforced
 - **No Password Storage**: Passwords never saved (security best practice)
@@ -43,11 +52,11 @@ A powerful, enterprise-ready Chrome extension that provides lightning-fast searc
 ### 🎨 User Experience
 - **Intelligent Search Modes**:
   - Contains (default)
-  - Exact match
-  - Regex patterns
-  - Fuzzy matching
+  - Case-sensitive search
+  - Directory path search
+  - Content value search
 - **Real-time Results**: Results stream as they're found
-- **Mount Filtering**: Search specific KV mounts
+- **Mount Filtering**: Search across all KV mounts
 - **Prefix Filtering**: Narrow scope to path prefixes
 - **Keyboard Shortcuts**: `Ctrl/Cmd + Shift + K` to open
 - **Dark Mode**: Automatic theme detection
