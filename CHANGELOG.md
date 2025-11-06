@@ -5,6 +5,31 @@ All notable changes to the Vault Search Pro extension will be documented in this
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2025-11-06
+
+### Added
+- **Search from Anywhere**: New dual-tab popup interface with "Search" and "Settings" tabs
+- **Universal Search**: Search Vault secrets from any webpage, not just Vault pages
+- **Popup Search Interface**: Complete search UI in extension popup with real-time results
+- **Loading Spinners**: Visual feedback during search operations with animated spinners
+- **Match Type Indicators**: Shows whether results are path matches or content matches
+- **Content Preview**: Displays matching key-value pairs in search results
+- **Click-to-Open Results**: Results in popup are clickable and open in Vault UI
+
+### Changed
+- **Complete Theme Redesign**: Changed from white-on-black to minimal black-on-white theme
+- **Removed Dark Mode**: Consistent white background design for better readability
+- **Refined UI Elements**: Cleaner borders, subtle shadows, and improved spacing
+- **Enhanced Buttons**: Better hover effects and visual feedback
+- **Improved Forms**: Refined input styling with focus states
+- **Optimized Popup Search**: Limited to 100 paths and depth 3 for performance
+- **Status Synchronization**: Connection status shown on both Search and Settings tabs
+
+### Fixed
+- Loading indicator visibility during search phases
+- Result card hover effects
+- Scrollbar styling for better contrast
+
 ## [2.0.0] - 2025-11-06
 
 ### Added

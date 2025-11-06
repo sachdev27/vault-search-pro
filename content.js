@@ -388,7 +388,8 @@ function flattenAll(data, prefix = '') {
 
     if (!term) { resultsBox.innerHTML = '<div class="small">Enter a term to search.</div>'; return; }
 
-    status.textContent = 'Getting token, URL, namespace...';
+    // Add loading spinner to status
+    status.innerHTML = 'Getting token, URL, namespace... <span class="spinner"></span>';
     let base, token, namespace, authData;
     try {
       authData = await getTokenFromPage();
@@ -409,7 +410,7 @@ function flattenAll(data, prefix = '') {
       return;
     }
 
-    status.textContent = 'Phase A: scanning paths fast...';
+    status.innerHTML = 'Phase A: scanning paths fast... <span class="spinner"></span>';
     const controller = new AbortController();
 
     let totalDeep = 0;
@@ -422,7 +423,7 @@ function flattenAll(data, prefix = '') {
       if (rec.type === "deep") {
         totalDeep++;
         resultsBox.appendChild(renderDeepResult(rec));
-        status.textContent = `Phase B: deep matches so far ${totalDeep}`;
+        status.innerHTML = `Phase B: deep matches so far ${totalDeep} <span class="spinner"></span>`;
       }
     };
 
@@ -456,5 +457,5 @@ function flattenAll(data, prefix = '') {
     }
   });
 
-  log("Injected v2.0.0 by Sandesh Sachdev. Button is top-right. Press Ctrl/Cmd+Shift+K to open. Path-first scan streams results immediately; deep scan follows.");
+  log("Injected v2.1.0 by Sandesh Sachdev. Button is top-right. Press Ctrl/Cmd+Shift+K to open. Path-first scan streams results immediately; deep scan follows.");
 })();
