@@ -12,7 +12,7 @@
   padding: 12px 18px;
   border-radius: 999px;
   box-shadow: 0 6px 24px rgba(0,0,0,.2);
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #000000;
   color: white;
   font-weight: 600;
   cursor: pointer;
@@ -24,7 +24,7 @@
 
 #vault-search-fab:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 32px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
 }
 
 #vault-search-fab:active {
@@ -86,12 +86,12 @@
 }
 
 #vault-search-panel::-webkit-scrollbar-thumb {
-  background: #667eea;
+  background: #000000;
   border-radius: 10px;
 }
 
 #vault-search-panel::-webkit-scrollbar-thumb:hover {
-  background: #5568d3;
+  background: #333333;
 }
 
 /* Results Styling */
@@ -118,8 +118,8 @@ input.v-input, select.v-input {
 
 input.v-input:focus, select.v-input:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: #000000;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
 }
 
 /* Buttons */
@@ -141,7 +141,7 @@ input.v-input:focus, select.v-input:focus {
 }
 
 .btn.primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #000000;
   color: #fff;
   border-color: transparent;
   font-weight: 600;
@@ -149,7 +149,7 @@ input.v-input:focus, select.v-input:focus {
 
 .btn.primary:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .btn.primary:disabled {
@@ -183,8 +183,8 @@ input.v-input:focus, select.v-input:focus {
   font-size: 12px;
   padding: 3px 10px;
   border-radius: 999px;
-  background: #eef2ff;
-  color: #4338ca;
+  background: #f3f4f6;
+  color: #000000;
   margin-left: 6px;
   font-weight: 500;
 }
@@ -193,8 +193,8 @@ input.v-input:focus, select.v-input:focus {
   font-size: 11px;
   padding: 2px 8px;
   border-radius: 999px;
-  background: #dbeafe;
-  color: #1e40af;
+  background: #e5e7eb;
+  color: #000000;
   margin-left: 8px;
   font-weight: 600;
 }
@@ -241,15 +241,15 @@ input.v-input:focus, select.v-input:focus {
 }
 
 .result:hover {
-  border-color: #667eea;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+  border-color: #000000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transform: translateY(-1px);
 }
 
 /* Loading Spinner */
 .spinner {
   border: 3px solid #f3f4f6;
-  border-top: 3px solid #667eea;
+  border-top: 3px solid #000000;
   border-radius: 50%;
   width: 24px;
   height: 24px;

@@ -316,7 +316,6 @@ function flattenAll(data, prefix = '') {
       </div>
       <div class="row">
         <div class="col"><label class="small">Prefix filter <input class="v-input" id="v-prefix" placeholder="e.g., apps/ or prod/"/></label></div>
-        <div class="col"><button class="btn" id="v-use-clipboard">Use token from Copy button</button></div>
         <div class="col"><span class="small">Phase A: path-only (instant). Phase B: deep scan on candidates.</span></div>
       </div>
       <div class="row">
@@ -339,17 +338,6 @@ function flattenAll(data, prefix = '') {
     const box = modal.querySelector('#vault-search-errors');
     box.innerHTML = `<div class="error">${msg}</div>`;
   }
-
-  modal.querySelector('#v-use-clipboard').addEventListener('click', async () => {
-    try {
-      try { await getTokenFromCopyButton(); }
-      catch { const txt = await navigator.clipboard.readText(); if (txt) sessionStorage.setItem("vault_ui_search_token", txt); }
-      const token = await getTokenFromPage(true);
-      showError(`Token captured (${token.length} chars).`);
-    } catch (e) {
-      showError(e.message + " — make sure the Copy token item is visible.");
-    }
-  });
 
   function renderPathCandidate({ fullPath, mount, kv2 }) {
     const el = document.createElement('div');

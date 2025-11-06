@@ -1,149 +1,474 @@
 {
   "rootFolder": "/Users/sachdevs/Projects/Vault Search Extension",
-  "analyzedAt": "2025-11-06T10:48:52.771Z",
+  "analyzedAt": "2025-11-06T12:16:38.406Z",
   "rootStructure": [
+    {
+      "name": ".github",
+      "type": "dir"
+    },
+    {
+      "name": ".gitignore",
+      "type": "file",
+      "size": 470,
+      "lines": 53
+    },
+    {
+      "name": "CHANGELOG.md",
+      "type": "file",
+      "size": 5965,
+      "lines": 144
+    },
+    {
+      "name": "COMPLETION_CHECKLIST.md",
+      "type": "file",
+      "size": 6318,
+      "lines": 280
+    },
+    {
+      "name": "CONTRIBUTING.md",
+      "type": "file",
+      "size": 6162,
+      "lines": 224
+    },
+    {
+      "name": "INSTALL.md",
+      "type": "file",
+      "size": 7244,
+      "lines": 290
+    },
+    {
+      "name": "LICENSE",
+      "type": "file",
+      "size": 1072,
+      "lines": 22
+    },
+    {
+      "name": "PRODUCTION_READY_SUMMARY.md",
+      "type": "file",
+      "size": 9771,
+      "lines": 338
+    },
+    {
+      "name": "QUICKSTART.md",
+      "type": "file",
+      "size": 2299,
+      "lines": 122
+    },
     {
       "name": "README.md",
       "type": "file",
-      "size": 487,
-      "lines": 15
+      "size": 11678,
+      "lines": 377
+    },
+    {
+      "name": "background.js",
+      "type": "file",
+      "size": 6268,
+      "lines": 245
     },
     {
       "name": "content.js",
       "type": "file",
-      "size": 18243,
-      "lines": 409
+      "size": 19993,
+      "lines": 464
     },
     {
       "name": "icon128.png",
       "type": "file",
-      "size": 440,
-      "lines": 4
+      "size": 4422,
+      "lines": 18
     },
     {
       "name": "icon16.png",
       "type": "file",
-      "size": 121,
-      "lines": 4
+      "size": 385,
+      "lines": 3
     },
     {
       "name": "icon48.png",
       "type": "file",
-      "size": 184,
-      "lines": 3
+      "size": 1290,
+      "lines": 5
     },
     {
       "name": "manifest.json",
       "type": "file",
-      "size": 648,
-      "lines": 35
+      "size": 1178,
+      "lines": 54
+    },
+    {
+      "name": "overview.json",
+      "type": "file",
+      "size": 26094,
+      "lines": 436
+    },
+    {
+      "name": "package.json",
+      "type": "file",
+      "size": 1156,
+      "lines": 44
+    },
+    {
+      "name": "popup.html",
+      "type": "file",
+      "size": 7778,
+      "lines": 335
+    },
+    {
+      "name": "popup.js",
+      "type": "file",
+      "size": 10378,
+      "lines": 365
+    },
+    {
+      "name": "scripts",
+      "type": "dir"
     },
     {
       "name": "ui.css",
       "type": "file",
-      "size": 1713,
-      "lines": 25
+      "size": 6328,
+      "lines": 359
+    },
+    {
+      "name": "utils.js",
+      "type": "file",
+      "size": 8456,
+      "lines": 353
+    },
+    {
+      "name": "vault-adv-search.zip",
+      "type": "file",
+      "size": 40641,
+      "lines": 151
     }
   ],
   "rootFileSnippets": {
+    "CHANGELOG.md": [
+      "# Changelog",
+      "",
+      "All notable changes to the Vault Search Pro extension will be documented in this file.",
+      "",
+      "The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),",
+      "and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).",
+      "",
+      "## [2.0.0] - 2025-11-06",
+      "",
+      "### Added"
+    ],
+    "COMPLETION_CHECKLIST.md": [
+      "# 📋 Project Completion Checklist",
+      "",
+      "## ✅ All Tasks Completed",
+      "",
+      "### 1. Standalone Authentication System ✓",
+      "- [x] Created `popup.html` with beautiful UI",
+      "- [x] Created `popup.js` with full auth logic",
+      "- [x] Created `background.js` service worker",
+      "- [x] Implemented Token authentication",
+      "- [x] Implemented UserPass (Basic Auth)"
+    ],
+    "CONTRIBUTING.md": [
+      "# Contributing to Vault Search Pro",
+      "",
+      "First off, thank you for considering contributing to Vault Search Pro! It's people like you that make this extension better for everyone.",
+      "",
+      "## Table of Contents",
+      "",
+      "- [Code of Conduct](#code-of-conduct)",
+      "- [How Can I Contribute?](#how-can-i-contribute)",
+      "- [Development Setup](#development-setup)",
+      "- [Pull Request Process](#pull-request-process)"
+    ],
+    "INSTALL.md": [
+      "# Installation Guide",
+      "",
+      "## Table of Contents",
+      "- [Prerequisites](#prerequisites)",
+      "- [Installation Methods](#installation-methods)",
+      "- [Configuration](#configuration)",
+      "- [Troubleshooting](#troubleshooting)",
+      "",
+      "## Prerequisites",
+      ""
+    ],
+    "LICENSE": [
+      "MIT License",
+      "",
+      "Copyright (c) 2025 Sandesh Sachdev",
+      "",
+      "Permission is hereby granted, free of charge, to any person obtaining a copy",
+      "of this software and associated documentation files (the \"Software\"), to deal",
+      "in the Software without restriction, including without limitation the rights",
+      "to use, copy, modify, merge, publish, distribute, sublicense, and/or sell",
+      "copies of the Software, and to permit persons to whom the Software is",
+      "furnished to do so, subject to the following conditions:"
+    ],
+    "PRODUCTION_READY_SUMMARY.md": [
+      "# 🎉 Vault Search Pro - Production Ready Summary",
+      "",
+      "## Overview",
+      "",
+      "Your Chrome extension has been successfully upgraded to a **production-grade, enterprise-ready** solution! The extension has been transformed from version 1.3.0 to **version 2.0.0** with significant enhancements.",
+      "",
+      "**Author**: Sandesh Sachdev",
+      "",
+      "---",
+      ""
+    ],
+    "QUICKSTART.md": [
+      "# ⚡ Quick Start Guide",
+      "",
+      "Get up and running with Vault Search Pro in 5 minutes!",
+      "",
+      "## 1️⃣ Load Extension",
+      "",
+      "```bash",
+      "# Option A: Load existing files",
+      "1. Open Chrome → chrome://extensions/",
+      "2. Enable \"Developer mode\""
+    ],
     "README.md": [
+      "# 🔐 Vault Search Pro",
       "",
-      "# Vault UI Search (MV3) — v1.3.0",
+      "[![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](https://github.com/sandeshsachdev/vault-search-extension)",
+      "[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)",
+      "[![Chrome](https://img.shields.io/badge/chrome-extension-orange.svg)](https://chrome.google.com/webstore)",
       "",
-      "**Speed-focused**:",
-      "- Two-phase engine: **Phase A path-only (very fast)** then **Phase B deep on candidates**.",
-      "- Streams results to the panel as they arrive.",
-      "- Higher default concurrency (**48 workers**) + request timeouts.",
-      "- Optional **mount** and **prefix** filters to narrow scope.",
+      "> **Production-grade Chrome extension for blazing-fast HashiCorp Vault secret search**",
       "",
-      "**UI**:"
+      "A powerful, enterprise-ready Chrome extension that provides lightning-fast search capabilities for HashiCorp Vault with multi-auth support, intelligent path scanning, and deep value search.",
+      ""
+    ],
+    "background.js": [
+      "/**",
+      "* Vault Search Extension - Background Service Worker",
+      "* Author: Sandesh Sachdev",
+      "* Version: 2.0.0",
+      "*",
+      "* Handles authentication state management, token storage, and message passing",
+      "*/",
+      "",
+      "// In-memory storage for sensitive data (session-based)",
+      "let authState = {"
     ],
     "content.js": [
+      "/**",
+      "* Vault Search Extension - Content Script",
+      "* Author: Sandesh Sachdev",
+      "* Version: 2.0.0",
+      "*",
+      "* Provides blazing-fast path-first search for HashiCorp Vault with deep value scanning",
+      "*/",
       "",
       "function log(...args){ console.debug(\"[Vault UI Search]\", ...args); }",
-      "",
-      "// Matchers",
-      "function fuzzyRatio(a, b) {",
-      "const x = (a || \"\").toLowerCase();",
-      "const y = (b || \"\").toLowerCase();",
-      "if (!x || !y) return 0;",
-      "const bigrams = s => new Set([...s].map((_, i) => s.slice(i, i + 2)).filter(t => t.length === 2));",
-      "const xb = bigrams(x), yb = bigrams(y);"
+      ""
     ],
     "icon128.png": [
       "�PNG",
       "\u001a",
-      "\u0000\u0000\u0000\rIHDR\u0000\u0000\u0000�\u0000\u0000\u0000�\b\u0006\u0000\u0000\u0000�>a�\u0000\u0000\u0001IDATx��Ա\r�@\u0014\u0005�3r\u0003&�",
-      "L���\u0001\u0019-@��\u0005p\u0012;\u0013�.���-�m�\f�.�\u000f`��x�_ϙw�c��c�a\u0001����Q\u0006���\u0016 N\u0000q\u0002�\u0013@�\u0000�\u0004\u0010'�8\u0001�\t N\u0000q\u0002�\u0013@�\u0000�\u0004\u0010'�8\u0001�\t N\u0000q\u0002�\u0013@�\u0000�\u0004\u0010'�8\u0001�\t N\u0000q\u0002�\u0013@�\u0000�\u0004\u0010'�8\u0001�\t N\u0000q\u0002�\u0013@�\u0000�\u0004\u0010'�8\u0001�\t N\u0000q\u0002�\u0013@�\u0000�\u0004\u0010'�8\u0001�\t N\u0000q\u0002�\u0013@�\u0000�\u0004\u0010'�8\u0001�\t N\u0000q\u0002�\u0013@�\u0000�\u0004\u0010'�8\u0001�\t N\u0000q\u0002�\u0013@�\u0000�\u0004\u0010'�8\u0001�\t N\u0000q\u0002�\u0013@�\u0000�\u0004\u0010'�8\u0001�\t N\u0000q\u0002�\u0013@�\u0000�\u0004\u0010'�8\u0001�\t N\u0000q\u0002�\u0013@�\u0000�\u0004\u0010'�8\u0001�\t N\u0000q\u0002�\u0013@�\u0000�\u0004\u0010'�8\u0001�\t N\u0000q\u0002�\u0013@�\u0000�\u0004\u0010'�8\u0001�\t N\u0000q\u0002�\u0013@�\u0000�\u0004\u0010'�����~=g��$\u0016 n�n�g�\u0011�c\u0001⾿\\\fP��L\u0000\u0000\u0000\u0000IEND�B`�"
+      "\u0000\u0000\u0000\rIHDR\u0000\u0000\u0000�\u0000\u0000\u0000�\b\u0006\u0000\u0000\u0000�>a�\u0000\u0000\u0010\u0000IDATx\u0001��r��\u001a�{l��ͦj'y\u0017\u0018���J6���Y�@\u0012��T�@�\u000b9\u0014��*N�1<",
+      "\u0010��(������k�\u0017��f���H��\\Z�G��������\u0005����\u0002�\u0000ZM�s�\u0000:\u0001��\u0002-\u001f~�\u0001:\u0001��\u0002-\u001f~�\u0001:\u0001��\u0002-\u001d�\r��\u0000f����\u0000ZJ�\r�\u0013�Y��a'��\u0012o��\u0004`�hi�\t���۰;\u0001�%Z\u001av\u0002h\u0019��p;\u0001�\u0016iY�\u0013@�\b���\t �H�ҝ\u0000ZFx<�N\u0000�EZ��\u0004�2���V.���{ouqq�E�=�m�\u000b�c\u001d��T��T\u0000\"�����\u000b\rn5��V\u001f���M ���R\bì\\�\u00004@#~X_Z��\u0010$\u0002&Ge��D\u0000\u001aԺF\u0014\u000flSy\u001dd��\bX\u0016b[�U�\u001a��\u0000 _��\u0019�z�������o\u0003��w+�\u000f��\u0011\u0000�\t���^�{����%��\f�,\u0013�\f��t�'{�!�=xф���",
+      "��\u0003ă\t\u0007�AT�7�",
+      "�\u0012(n�\u0018�D^���'���\u0006",
+      "f�\\\u0000Æ��\u000f�ê�u~&\u00046�~�xF\u001f���6\u0001�\u0000����m:����7�\tӮ[�\u00004�qq��G꿥Ma�\r`�~�ً&�L�`v��A-\u0002�{\u0013�\u000b�yKgc\r��Z�X�\u0000��_�軋w�\u000f�v\r��\u0001�n�d�_�\u0000�\u0007�{㓌�\u0013�H�\u0002�1?��{�r��%g\u001ar�!����\u0017\u0016\u0016���:*[\u00073�PB��&���\u0015wZ��- 1#toww�����:r�)�D9�e7u>B�{1�&�ׯ_�W�4\u0005`3\u001d��.�C���>�\u00182!\u0015��\u001f�ŊN<�ej\u0013���g��W����C��u��e����ݗ_~����S\u0017��Sv�y\u0006�\u0001��45�6\u0001L�`6��\u001e�U��\u0007�\u001a����n{{����\u000b.��Ɔ�_YYv_}��{��^(��\u001f�`y�\u001boP�\u0000�=��[�p\u000f�l,��\u0010Ϭ�cW�����M8\u0018\f\u001c8ȫ��\u000f\u001e<p�ԩ��s\u0011\u0003�ԟ\u001b\u0011�&�e�\u000fJ�{�,�WEf���\u0003♽\u000b\u000b=\u0011Ϭ.'���>B�]|E\b`C�a�\u0010\u0010\u0001o�N��(^��Tm\u0002�w�ZF>3uE.��\u001b�r#�{�v���\u001f\u000e<�܅ \u000fP�ƍ\u001b\u0007<\u0013B�#�� ����\u001f\u0014D\u0018�5!^�\u0000�]��\r|��]\u0007�5RL>�@�`��ݷ�\u0007�\u0010jD���X\u0019!w!���#��:\b��\b�\u0015\"\u0002�\r\b\rX�\u0004�?�n馅�",
+      "\u0000\u0003#\u00006d�1TL>m@Ɔ����\u0001I\u000f��x��3�\u0017��}��믿�G\u001f}\u0014��'ið����\b�\u0006\\w?ǹ&��R\u0001���\u0013���y7��`�C��|��\u0010G%�����=��x��]y�o���]Y[s��%\u0017��9�ԥ-�\u0007B�\u0000oP&�L�T�\r�^�1\u0002�n��ق|�\bɏg=D����ի\u000e!\u0018�x������B�\u0019��p�����\u001e=~�\b9�|�\u0000\u0000q��Y~\u0000�\f73�f�����\\6��ُ���\u0003��̇|�\u0006#\u001b��\u0013�\f�����ŋ�ٳgdyp��`��y1a\u0010\u0007\b\u0000\u0010\u0007,\u0007�%\u0014������I\u001d�\u0010���\u001b\u0015c�~����GH���\u000b�\u000b\u0017.��'O��ׯ�ͧ�|H��<�0\u0006[\u0003w��yw��}�\u000e�k\u0001+`\tB\u0004��\u0000V3�ZV�a�\u0002�����T��C\u0006D�Y�٭�=�[V'̣\u001d�A\u0004\bf�9\\\u0013�ù�\u0004!L�\u0019r�f�d��\u0005 ���d�1���\u000f�\u0000>1�\u0005R�\"�<k=!��\u0001q����\u0004\u0018��3�'\u0000�\u000b�kK\u0001����\u0005�\u0016@�\u0011�\\?\u0004q;\u0007B2�\fB�)�@6��\u0003�����o�P�s\u0001�\r\b+\u0014\u0001� �\u0002Z",
+      "r��V�HZ\u0000��?��fTHb����c�����m\u001du \r���\u0002��\u001c�9�%��0�C>�B\u0001�!�C�\u000f$��]\u000by)\"i\u0001�`�,¸[ڠ)�\u001f�\u0006��^�t?\u000f��J�\u0003B!�'��\u0003����\u0001\\<�o���\u0003U�\u0007瀐l",
+      "�c�\u0006֏��2\u000fF�,p�6�\u0015@l<�+��\u0006\u001a\u0012��d�\u000f�\u0007��3\u0010\u0002ȇ@B@��7{\u0000�w�0�\u0002\u000f\u001e�w��Ε\u0017�\u0005ly���"
     ],
     "icon16.png": [
       "�PNG",
       "\u001a",
-      "\u0000\u0000\u0000\rIHDR\u0000\u0000\u0000\u0010\u0000\u0000\u0000\u0010\b\u0006\u0000\u0000\u0000\u001f��a\u0000\u0000\u0000@IDATx�c\u0014�P��@\u0001`�D3\u0003\u0003\u0003\u0003\u000b����\r�4",
-      "IjP�\u0005�&�\u0002�.��\u0005�\u0006\f\u0006\u00030�\u0001�)�b\u00170\u000exn\u0004\u0000�y\u000bp\r�Y�\u0000\u0000\u0000\u0000IEND�B`�"
+      "\u0000\u0000\u0000\rIHDR\u0000\u0000\u0000\u0010\u0000\u0000\u0000\u0010\b\u0006\u0000\u0000\u0000\u001f��a\u0000\u0000\u00016IDATx\u0001��_j�0\u0010�'❖�Z}\u0015|�4����P��Y��\u0007��z���\u0010��י,\u0015Gi\u000bۊ_�d&�|\u0019b�\u001f��\u0005�������\u0003\u0017\u000b��<�'< ƚ�g\u0000*�L9\fCL��D1I\b����\f �N�)��8��(U�u�bZ����\u0000�k���Dy�\u0007��\u001b�y\u000e�\u0019� 8��f`\u0000�M��J)�i\u001a�m\u001b�\u0010\u0010E\u0011�mK��\u0012�\u001d�0��6\u0013Ĳ,��Jo��;=Y\r\f�Ut8<%}�\u0003^E�PJQ�k q\u0018\u0000\u0017J\u0014d�k��~r�}�i��Y�ya\u0018>#pׇ-���c��*p��WB\b��[\u0014E�\u0000\u0017{D5�\u0018@܋��:  ��!s�\u0000�X~�8�\u001e:\u0010\f��<\u00123\u0007�\u0000>\u0001\u0000\u0000���R��\u0000\u0000\u0000\u0006IDAT\u0003\u0000�כ!���\u0000\u0000\u0000\u0000IEND�B`�"
     ],
     "icon48.png": [
       "�PNG",
       "\u001a",
-      "\u0000\u0000\u0000\rIHDR\u0000\u0000\u00000\u0000\u0000\u00000\b\u0006\u0000\u0000\u0000W\u0002��\u0000\u0000\u0000IDATx��ڡ\u0011�0\u0010\u0000�\u000fC\u0003��\u0002�\u001a:��\u0002���\u0018��̭����K�0-g$��\u0003���ño�\u001c���\u001a\u0011�@U˾��)�7`\u0000�\u0000�\u00014\u0003h\u0006�\f�\u0019@3�f\u0000�\u0000�\u00014\u0003h\u0006�\f�\u0019@3�f\u0000�\u0000�\u0001��;q�\u0017��\u001b(�V�]\t�\u000b��|\u001f8\u0000\u0000\u0000\u0000IEND�B`�"
+      "\u0000\u0000\u0000\rIHDR\u0000\u0000\u00000\u0000\u0000\u00000\b\u0006\u0000\u0000\u0000W\u0002��\u0000\u0000\u0004�IDATx\u0001�KV\"K\u0010�\u0013d����m@)Fzu\u000bn��-�~��\u00158s�GG�\u0002z{CNĪ�іB7h\u0016�v�9x22��\u0011��\u0011�I�y����\b��\u0000�\"0�@F\u000f�R(�\u00033o��@�P\b��Ʈ?Zd����\u0017\u0001��q|��\\.w�\u001bP����N\r'��.��\" �\u0015��|zz��\u001fT\u0012��Z��9U�\u0007rZ����E@ZL��Zx�\ral�\"����v({�ŗ�)�\u0000�e��\u0011�\u00119ɜE�G�\t\b|�G�g��& `��Ԕ��\u000b\u001e�\u0010����'���R�m\r�f�\u0010p.��j\u0007�$���x���bP.O�D�vnqq���5�\u0019*�t\u0004��W��\u001a���e��������Ba�U����ښ;>>v\t\u0011�����d.�\u0004���]���Š��u>���%�.���\r����.//\u0015��M)퐇�\u0007\u0007���;��(�\u001e\u0006\to\u0002� �\u0000���������ֳ\u000bÐ�drr���޺�g�X\u0010\u0004\u000e\u0012�R\u0019����\u001b��D\u0000��\r\u0004���xt\u0000�g-ZJ-kE�U�*�'\u001a����im`\u001b\u0007��\u0012��'e��33\u0006�T���sHҧ�IU���k�aD!\u0005\u0001Y�(�j\u001d\u0000GGG�\u001ax\u0014`����}�\u0016���s;\u0003�\u001f�\u0012�D�\u0004�c<�\fL\u0000��r��R��l:\u0004�s�mB\u0015�\u000eX���#\u0012��H���\u001c��\u0014\u0012Dg�T�\u0016֧�\b-R,\u0016i,\"\u0000gN/�66�*S\u0004�M�d)����H\u0015<\u000b�$= �\u0000�yƹNY3\f\u0019���@�j5\r\u0003ia\u001dU\u0010����t\u0002lS����ʊ����h�s���:�E~�^�\\�IW\rL@)c��Œ�����\u001d���\u000b����\twpp`\u0007\u00192\b\u0004�/���C��\u000fF�p��\u001e�\u0000\u001at�x���\u001a\u00058��I\u0017��\u0018k\u0011�W*\u0015#�:����ț@bP���k��Wu��Q\u0014\u001b(<��\u0001��J\u0017\"C���g�[AԤ��M�,�M\u0000�xP�u�)",
+      "�����\u0005���h7R\u0002(����Ҋܟ��v����B��*��L�ǎ7\u0001\u0016C��S��\u0004ԁ��ύF����\u0018���q����h���ܗ/�8�j���������ˡ��D�\u001c�i�W?\u0015\u0001�ُ���S$6I\r\u000e.`\u0013��X\u0007�@/q�P`�z�˝���'''��\u0003ؾ\u0013��@��֫x\u0013@9�i�i��\u0012���I�.\u00018g��i����w���jګ\u0014����T^\u0011��ϒ\u0000\u0017P+�|��3\u0012���;\u0002ϊB\u0019��",
+      "�U (��n�T�HE@����k\u0011�$�&ࣟ��$��D���M@���\u0017��ds\u0018\"t\u0001��.����^���ϋ�\f\u0000�\u0006�\u0012<_S;\u0014!\u0012���HH?���yƋ\u0000\u0007PR�-��\b��Pz��d�$B]d4޷x\u0011�{�\u0013��\u0004'U�v�����G\u0011��\u0011������Q\u0004>��=M�\"��-�8��G�\u0000\u0000\u0000���U\u000e�\u0000\u0000\u0000\u0006IDAT\u0003\u0000\u0000���%%g\u0012\u0000\u0000\u0000\u0000IEND�B`�"
     ],
     "manifest.json": [
       "{",
       "\"manifest_version\": 3,",
-      "\"name\": \"Vault UI Search\",",
-      "\"version\": \"1.3.0\",",
-      "\"description\": \"Blazing fast path-first search for Vault KV + optional deep value scan.\",",
+      "\"name\": \"Vault Search Pro\",",
+      "\"version\": \"2.0.0\",",
+      "\"description\": \"Production-grade HashiCorp Vault search with multi-auth support, path-first scanning, and deep value search capabilities.\",",
+      "\"author\": \"Sandesh Sachdev\",",
       "\"icons\": {",
       "\"16\": \"icon16.png\",",
       "\"48\": \"icon48.png\",",
-      "\"128\": \"icon128.png\"",
+      "\"128\": \"icon128.png\""
+    ],
+    "overview.json": [
+      "{",
+      "\"rootFolder\": \"/Users/sachdevs/Projects/Vault Search Extension\",",
+      "\"analyzedAt\": \"2025-11-06T12:11:40.088Z\",",
+      "\"rootStructure\": [",
+      "{",
+      "\"name\": \".github\",",
+      "\"type\": \"dir\"",
+      "},",
+      "{",
+      "\"name\": \".gitignore\","
+    ],
+    "package.json": [
+      "{",
+      "\"name\": \"vault-search-pro\",",
+      "\"version\": \"2.0.0\",",
+      "\"description\": \"Production-grade Chrome extension for blazing-fast HashiCorp Vault secret search\",",
+      "\"author\": \"Sandesh Sachdev\",",
+      "\"license\": \"MIT\",",
+      "\"repository\": {",
+      "\"type\": \"git\",",
+      "\"url\": \"https://github.com/sandeshsachdev/vault-search-extension.git\"",
       "},"
     ],
-    "ui.css": [
+    "popup.html": [
+      "<!DOCTYPE html>",
+      "<html lang=\"en\">",
+      "<head>",
+      "<meta charset=\"UTF-8\">",
+      "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">",
+      "<title>Vault Search - Settings</title>",
+      "<style>",
+      "* {",
+      "box-sizing: border-box;",
+      "margin: 0;"
+    ],
+    "popup.js": [
+      "/**",
+      "* Vault Search Extension - Popup UI Controller",
+      "* Author: Sandesh Sachdev",
+      "* Version: 2.0.0",
+      "*/",
       "",
+      "// DOM Elements",
+      "const vaultUrlInput = document.getElementById('vaultUrl');",
+      "const namespaceInput = document.getElementById('namespace');",
+      "const tokenInput = document.getElementById('token');"
+    ],
+    "ui.css": [
+      "/* Vault Search Extension - UI Styles",
+      "* Author: Sandesh Sachdev",
+      "* Version: 2.0.0",
+      "*/",
+      "",
+      "/* Floating Action Button */",
       "#vault-search-fab {",
-      "position: fixed; top: 20px; right: 20px; z-index: 2147483647;",
-      "padding: 10px 14px; border-radius: 999px; box-shadow: 0 6px 24px rgba(0,0,0,.2);",
-      "background: #111827; color: white; font-weight: 600; cursor: pointer; border: none;",
-      "}",
-      "#vault-search-modal { position: fixed; inset: 0; background: rgba(0,0,0,.35); z-index: 2147483646; display: none; }",
-      "#vault-search-panel {",
-      "position: absolute; top: 10%; left: 50%; transform: translateX(-50%);",
-      "width: min(980px, 95vw); max-height: 80vh; overflow: auto;"
+      "position: fixed;",
+      "top: 20px;",
+      "right: 20px;"
+    ],
+    "utils.js": [
+      "/**",
+      "* Vault Search Extension - Utilities",
+      "* Author: Sandesh Sachdev",
+      "* Version: 2.0.0",
+      "*",
+      "* Common utility functions for validation, sanitization, and helpers",
+      "*/",
+      "",
+      "// Validation utilities",
+      "export const Validators = {"
+    ],
+    "vault-adv-search.zip": [
+      "PK\u0003\u0004\u0014\u0000\b\u0000\b\u0000��f[\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\r\u0000 \u0000background.jsux\u000b\u0000\u0001\u0004�\u0001\u0000\u0000\u0004\u0014\u0000\u0000\u0000UT\r\u0000\u0007։\fi�\fi։\fi�Y[o�6\u0014~ׯ8�",
+      "�.\u001c9��ХH���Z���v�\u0016E�2\u0012\u001dk�%��rY�_�������CR�%��v�C\u001c�����\u000b���'\u001e<��,O\u0014L8\u0013�\u001c����2�R؁�,��\u0014Y�F�+���\u001f���N\u001d�j��}��4�r���<�ך!\u0017�a\u001f�\u0006��.���\u001b�K�\u0004��x��)�\"\u0015S\u001c\u0016,e�|��=P�\u0015��L�R\u000f�\u0018,���\u0005�L�8�Dv}���a��,�\"\u0013w\u00059�2\u0001�\fP�5��)\u0006\u001d��Q��\u0005�<�z\tWZ���|\u0000�\u001e�5���H�!͓��+)C�K\u0016�rI+V~%\u001eӻ%��X�x�\u000f3�HN�\t��0D�bug���sm� K�\u0001��^H������|��l4�x>\u001d\u001d\u000fQ����_w�_{����\u0001���<�Eq�p0\u001d�\u001fM?�\u000f�\f\u0007o�G'�����\u00112h\u001c�E��[\u0007��X\u0012�Žp.�\u0005\u000fD�\u0006�g��H�$�Q���(��\u000b.:��+\u0016'�\u000b\u0007/��Hz�� �.;��*�>W�\u0014\u0017���2\"��=(8�+\u0000�\u0019\u0014�\u0003���3\u0007\u0007\u0007�ۃ~W\u000b\u0003��t��Xf�|\tH5�\u0005Zo�4����\u0004� C�3\"� ����\u001a�\u001f[P�50�C\u0007X����͹D�\"�\".��\u0018��n�[9e�C��t��GWX��B<\u0019țXa:vj;�\u0007!\u0002\u0019���t<<?|7}���e��L0\u00178��;Ly�����{�y\u0018�\"��D�a��.0",
+      "WZ�B���.���+��",
+      "Eu�\u001b�\u0018x��s�L#��Amc������.$L������\u001b������͹N�F\u0004�|&�&N�`ԃ\u0010�\u0005�$\t\u0011\u0016,-�\u0018\u0002'��Cp��Tk���-�KW\u001eC���\u0004\b�\u00122y��x�p�jt����z�\"4� �Y0����7��0�>Ȓw�U�ݤ�6�K��������n+Riko���s����/�,Ou�y���k:�ͮS�;D\u0015\u0014_{z�҂���n�m;�[�o�\\�%�S|-7+�E���z�zEن��t�S:z�*\u001a��;0f���\f�ܝoJ\u0019�\r{�\u0005�(\u0006\u0019��H+\u0000T��K#�k�y��-�zIǦ�Va`\u0015~`\\����\"�����2ȒL�ɐ>��/{�\u0017�=�3ǭn�\tetA�a�aŌ\u001e3h:\u0011�/�n���J��\u001d&֢�V\u0016uԩ�=ZSԊ",
+      "o���\u0016���\u0001�$Su",
+      "��e�M�Ŝ�W$��Ts&��.c����\u0002�u�8\r�Q\u0005\u0001��\u0012\u00028\b��Vq��\u001a�����a���\rX�5��\u0012��\"�\b�os���o鵉�\u0007\u000b!\r����N\b\u0007�j��\\Ps��JI�ߜneޗ|�&I�^\u0001���2P�\u001a���6\u0000\u001e�#7C���o��b\u001cn\u001d�\u001f��m���Q�u�v5j���",
+      "Ƿꙶ\u001a��R�6u�K\u001d�\u0002g�\u001bv�p�(��鸍^P\u001b\u0007�v�]�����)\u0001",
+      "oFe�)�s�3�t1\u0003�?�h�w�r�\u001a0!\u001d�Tp\u0002F:�(�-���K�O��}M����Lk�m�ɵ�|r�O",
+      "\u001a�3��r֤�ʫ�S\f6t���",
+      "f\u001cg�Η��\u000f�jտ���r_��סۑ<�}�9�\u0016\u001c�\b7��t2�{u]�b\u0012s\u0016>*\u0014\b���4�(�\u0001�\u000eC�Q�)i��g�W\u001c���{w����\\}�ۨGEk�;C>/�^#fHlNiH\u0005a\u0012c���V�~s-ۦR[�Z:;|�x�ٯp\u0016�w\u001c��fsЋ���$�m6��YO\u0019�\u0011\u0014S�M\u0016��×�\u0000=>�6\u0001�\u0015A��\u0003K�\u001b�\b3C\\�\u0004\u001dH�\bms��v~p\u0005����\u0005ՠbq\r�K�u:a\u001dt,:���Q�����S�\u0004��&�oa�����\u000b�3����c\u001d�gw�Kz�*\u000e�~�Җ�u2\b�B�����M��`2\u000e]��6��%�����g�2��Q�X%t�jV��x$\u0000�c��\u0002��Q.�34\f� :\b-\u0007v��4�1Y�\u0018qG�rϭ�W��W�^��=#�.h��P�{�\t��\u0010�W^��%\u001d�j���|#Y�LSܶtӹU�4�\u0017گ9rD�S^o�bՔ\u0018\u001a��ȴ\u0011Θj��\u0018�\u0019(\u0014��\u0014&���l\u000b\u0017]n�4�=֝O�1�����\u0003:D��W��\u0016��\u001b\u001bDk�m�ׄ)Ng�s\u001c�.-\u0004\u0014���Qd^��}���Ƈ8�X��d]qA�66o\u0000�dlk�n�ԍYZfh\u0019\u000f,E3��<�;�2\rw�0Q}�4�7o��=�\u001e!.��q���G�n\u0011FKC\u0011�T�\bڣ=��_[<ONj�#ꮖ�Cцӕ\u0019H�/�\u001b�/\u0003�L�S����\u0003PK\u0007\bv:yx�\u0007\u0000\u0000|\u0018\u0000\u0000PK\u0003\u0004\u0014\u0000\b\u0000\b\u0000��f[\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\f\u0000 \u0000CHANGELOG.mdux\u000b\u0000\u0001\u0004�\u0001\u0000\u0000\u0004\u0014\u0000\u0000\u0000UT\r\u0000\u0007Љ\fi�\fiЉ\fi�X�r\u001b�\u0011��)\u0010�\"+�dy7[[�ɲTf$�,RR6��\u00038�!��\u0019�\u0002\u0018J�\u001b䒤��6�ԾENy��@�\b��\u001b����V�J�\u0000h\u0000�_�5����n\u0017�v��മU뢞�F\u0015�9��T\\\u001au��:��ѾX��w�<F�\u0006�Z�`�lnT銾1m4��-\u0016٠*[����\u0006\u0006*�\u001b\u001d\u0015>�u�\u0014,�xiL���\u0004�\u001f,c�����{��\"?*\\sl�㓣�G/�_\f\u0007�-e�λ\u001fL\u0011�.���i?�L��h\u000bug<\u001dж;��iV�\u001f9�8\u000e�)�W����26�\u000b���s���|�F���W�\u0019���^~C\u0003��iY�r0R����\u0013�ڵF��p\u000fm�#9c�\u000e�4���ՙk��D�:����\u001d�\u000bT���.z�C%��K�+�'���Q�l�q;�v̛^��vD��Y�u�G���ݛv�n��\u0013\u001d�:x�\u0003�N�^\f\u00159����D��c6\u0006;�������»\u001eSgƯla�7��_�V\u0013\f��\u000fQ�f\u001c\u0006�_ն2ź�\r[���4s�յQ\u0017}˗ӵ�k������Z\u0005���t��\u0015�+�)i#]�.\u001dn��|\u0019Tk\u00106^P��=�t�Eצq�-��\u000e\u0018�\u0019ɸO�\bl��P��Aմ�'\bn6f��H55\u0015p��3���Mk\u001et�a��S��8rf\u0002'���R�̜�\u001a!�8{\u001a��1\u0014d"
     ]
   },
-  "importantFolders": [],
+  "importantFolders": [
+    {
+      "path": "scripts",
+      "category": "scripts",
+      "fileCount": 3,
+      "primaryLanguage": "JavaScript"
+    }
+  ],
   "readmeParagraphs": {
-    "root": "# Vault UI Search (MV3) — v1.3.0"
+    "root": "# 🔐 Vault Search Pro"
   },
   "totals": {
-    "numFiles": 7,
-    "numDirs": 0,
-    "totalSizeBytes": 21836,
-    "totalLinesOfCode": 409
+    "numFiles": 28,
+    "numDirs": 4,
+    "totalSizeBytes": 200735,
+    "totalLinesOfCode": 1722
   },
   "fileCategories": {
-    "documentation": 1,
-    "source": 1,
-    "other": 4,
-    "config": 1
+    "other": 10,
+    "config": 4,
+    "documentation": 7,
+    "source": 7
   },
   "linesOfCodePerLanguage": {
-    "JavaScript": 409
+    "JavaScript": 1722
   },
   "filesPerLanguage": {
-    "JavaScript": 1
+    "JavaScript": 7
   },
-  "projectTypes": [],
+  "projectTypes": [
+    "JavaScript/Node.js"
+  ],
   "frameworks": [],
-  "entryPoints": [],
-  "ciCdTools": [],
-  "packageManagers": [],
-  "topLevelDirectories": [],
-  "detailedDirectories": [],
+  "entryPoints": [
+    "scripts/build.js",
+    "scripts/package.js",
+    "scripts/validate.js"
+  ],
+  "ciCdTools": [
+    "GitHub Actions"
+  ],
+  "packageManagers": [
+    "npm/yarn"
+  ],
+  "topLevelDirectories": [
+    {
+      "name": "scripts",
+      "numFiles": 3,
+      "totalLoc": 295,
+      "dominantLanguage": "JavaScript"
+    }
+  ],
+  "detailedDirectories": [
+    {
+      "path": "scripts",
+      "name": "scripts",
+      "level": 1,
+      "numFiles": 3,
+      "totalLoc": 295,
+      "dominantLanguage": "JavaScript",
+      "category": "Tools/Scripts",
+      "description": "Tools/Scripts module with 3 files (JavaScript)",
+      "subdirectories": []
+    }
+  ],
   "architecturalInsights": {
     "coreApplications": [],
-    "entryPointDetails": [],
+    "entryPointDetails": [
+      {
+        "path": "../../../../scripts/build.js",
+        "type": "Unknown",
+        "description": ""
+      },
+      {
+        "path": "../../../../scripts/package.js",
+        "type": "Unknown",
+        "description": ""
+      },
+      {
+        "path": "../../../../scripts/validate.js",
+        "type": "Unknown",
+        "description": ""
+      }
+    ],
     "serviceArchitecture": {
       "microservices": [],
       "monoliths": [],
@@ -159,13 +484,25 @@
   "largeFiles": [],
   "dependencies": {
     "production": [],
-    "development": [],
-    "total": 0
+    "development": [
+      "archiver",
+      "eslint",
+      "prettier"
+    ],
+    "total": 3
   },
   "complexity": {
-    "averageFileSize": 58.42857142857143,
+    "averageFileSize": 61.5,
     "maxFileSize": 0,
     "nestedDepth": 0,
     "estimatedComplexity": "low"
-  }
+  },
+  "gitRepo": {
+    "firstCommitDate": "2025-11-06",
+    "totalCommits": 1,
+    "numContributors": 0,
+    "currentBranch": "master",
+    "remoteUrls": []
+  },
+  "license": "MIT"
 }
