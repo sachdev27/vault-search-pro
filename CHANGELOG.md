@@ -5,6 +5,64 @@ All notable changes to the Vault Search Pro extension will be documented in this
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.0] - 2025-11-07
+
+### Added
+- **GitHub Pages Website**: Professional marketing site at https://sachdev27.github.io/vault-advance-search
+- **Interactive Demo**: Live demo page showcasing extension features with simulated search
+- **Privacy Policy Page**: Comprehensive privacy policy hosted on GitHub Pages
+- **Buy Me a Coffee Link**: Support link added to popup and website
+- **Chrome Web Store Documentation**: Complete submission guides and justifications
+- **Optional Host Permissions**: Runtime permission requests for enhanced security
+
+### Changed
+- **Permission Model**: Changed from required `host_permissions` to `optional_host_permissions`
+- **Runtime Permission Requests**: Permissions now requested when user configures Vault URL
+- **User Consent Flow**: Chrome permission dialog shown to user before accessing Vault server
+- **Enhanced Security**: Extension installs with zero host access by default
+- **Repository Name**: Updated references from vault-search-pro to vault-advance-search
+
+### Security
+- **Improved Permission Model**: Optional permissions provide better security and transparency
+- **User Control**: Users can grant/revoke permissions at any time
+- **Runtime Requests**: Permissions requested only when needed, not at install
+- **Chrome Permission Dialog**: Native browser permission prompts for user consent
+- **Minimal Install Footprint**: No host access until user explicitly configures extension
+
+### Documentation
+- **CHROME_WEBSTORE_RESOLUTION.md**: Complete guide for Chrome Web Store submission
+- **HOST_PERMISSIONS_JUSTIFICATION.md**: Detailed explanation of permission requirements
+- **SCRIPTING_PERMISSION_RESOLVED.md**: Documentation for removed unnecessary permission
+- **FINAL_SUBMISSION_CHECKLIST.md**: Pre-submission verification checklist
+- **Privacy Policy**: Professional privacy policy page with comprehensive disclosures
+- **Updated README**: Cleaned up to reflect only actual extension features
+
+### Fixed
+- Removed unnecessary `scripting` permission from manifest
+- Corrected GitHub repository URLs throughout documentation
+- Updated demo and website footer links to include privacy policy
+- Cleaned up README to remove non-existent features (side panel, advanced search modes)
+
+### Website & Demo
+- **Marketing Site**: Feature showcase, installation guide, and documentation
+- **Demo Page**: Interactive replica of extension popup with simulated Vault data
+- **Responsive Design**: Mobile-friendly layout with modern aesthetics
+- **Navigation**: Seamless links between home, demo, and privacy policy pages
+- **Professional Branding**: Consistent purple gradient theme across all pages
+
+### Chrome Web Store Preparation
+- **Permission Justifications**: Ready-to-use explanations for all 6 permissions
+- **Privacy Practices**: Complete data usage disclosures and certifications
+- **Store Listing**: Optimized description, screenshots guidance, and category selection
+- **Review Response Templates**: Prepared responses for common reviewer questions
+- **Compliance**: Full adherence to Chrome Web Store policies and best practices
+
+### Developer Experience
+- **Comprehensive Guides**: Step-by-step submission process documentation
+- **Testing Instructions**: Verification procedures for permission flow
+- **Response Templates**: Pre-written responses for Chrome Web Store review
+- **Troubleshooting**: Common issues and solutions documented
+
 ## [2.1.0] - 2025-11-06
 
 ### Added
@@ -122,6 +180,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Release Notes
 
+### Version 2.3.0 Highlights
+
+This release focuses on **Chrome Web Store preparation** and **enhanced security**:
+
+🔒 **Optional Permissions**: Changed to runtime permission model - extension installs with zero host access by default. Users explicitly grant permissions when configuring their Vault URL.
+
+🌐 **GitHub Pages**: Professional website with interactive demo at https://sachdev27.github.io/vault-advance-search
+
+📄 **Privacy Policy**: Comprehensive privacy policy page for Chrome Web Store compliance
+
+📋 **Chrome Web Store Ready**: Complete documentation, justifications, and guides for Chrome Web Store submission
+
+🛡️ **Enhanced Security**: User controls all permissions through Chrome's native permission dialogs
+
+✨ **Interactive Demo**: Live demo showing all features with simulated Vault data
+
 ### Version 2.0.0 Highlights
 
 This is a **major release** with significant new features and improvements:
@@ -164,5 +238,6 @@ Future versions may include:
 ---
 
 **Author**: Sandesh Sachdev
-**Repository**: https://github.com/sachdev27/vault-search-pro
+**Repository**: https://github.com/sachdev27/vault-advance-search
+**Website**: https://sachdev27.github.io/vault-advance-search
 **License**: MIT
